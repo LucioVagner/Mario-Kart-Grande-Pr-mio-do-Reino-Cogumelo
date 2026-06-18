@@ -3,6 +3,7 @@
 #include <string.h>
 #include "pilotos.h"
 
+
 NoPiloto* criar_lista_pilotos(){
     return NULL;
 }
@@ -10,8 +11,9 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
     NoPiloto *aux = (NoPiloto*) malloc(sizeof(NoPiloto));
 
     if(aux == NULL){
+        aux->anterior = NULL;
         printf("ERRO DE ALOCAÇÃO!");
-        return lista;
+        return aux;
     }
     aux->proximo = NULL;
     
@@ -46,6 +48,7 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
         novo = novo->proximo;
     }
     novo->proximo = aux;
+    aux->anterior = novo;
 
     return lista;
 }
@@ -55,7 +58,7 @@ void listar_pilotos(NoPiloto *lista){
 
 
     if (aux == NULL){
-        printf("ERRO AO ALOCAR MEMORIA.\n");
+        printf("ERRO! LISTA VAZIA.\n");
         return;
     }
 
@@ -74,6 +77,7 @@ void listar_pilotos(NoPiloto *lista){
                 printf("Pesado.\n");
                 break;
         }
+        
         printf("Velocidade: %d\n", aux->piloto.vel);
         printf("Quantidade de trofeus: %d\n", aux->piloto.trofeus);
         printf("STATUS DO PILOTO: ");
@@ -88,7 +92,60 @@ void listar_pilotos(NoPiloto *lista){
                     printf("ACIDENTADO.\n");
                     break;
             }
-        aux = aux->proximo;
         }
         
     }
+NoPiloto* remover_piloto(NoPiloto *lista){
+    NoPiloto* aux =  lista;
+
+    if (aux == NULL){
+        printf("ERRO!! LISTA VAZIA.\n");
+        return;
+    }
+
+    while (aux != NULL){
+        if(aux->piloto.status == 1){
+            NoPiloto *remove = aux;
+
+            if(aux->anterior != NULL){
+                aux->anterior->proximo = aux->proximo;
+            } else{
+                lista = aux->proximo;
+            }
+
+            if (aux->proximo != NULL){
+                aux->proximo->anterior = aux->anterior;
+            }
+
+            aux = aux->proximo;
+            free(remove);
+            printf("Piloto removido.");
+
+        } else{
+            aux = aux->proximo;
+        }
+    }
+
+    return lista;
+}
+
+void listar_piloto_nome(NoPiloto* lista, char name[50]){
+    NoPiloto *aux = lista;
+
+    if (aux == NULL){
+        printf("ERRO! LISTA VAZIA.\n");
+        return;
+    }
+
+    while (aux != NULL){
+        if(strcmp(aux->piloto.nome, name) == 0){
+            listar_pilotos(aux);
+            return;
+        }else{
+            aux = aux->proximo;
+        }
+    }
+    printf("Piloto não encontrado.\n");
+
+    return;
+}
