@@ -13,6 +13,9 @@ typedef struct pilotos{
 typedef struct NoPiloto{
     Piloto piloto;
     struct NoPiloto* proximo;
+    struct NoPiloto* anterior;
 }NoPiloto;
 
 NoPiloto* criar_lista_pilotos();
+
+#
