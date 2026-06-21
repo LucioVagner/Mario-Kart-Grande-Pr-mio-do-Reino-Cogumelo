@@ -11,7 +11,6 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
     NoPiloto *aux = (NoPiloto*) malloc(sizeof(NoPiloto));
 
     if(aux == NULL){
-        aux->anterior = NULL;
         printf("ERRO DE ALOCAÇÃO!");
         return aux;
     }
@@ -52,7 +51,6 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
 
     return lista;
 }
-
 void listar_pilotos(NoPiloto *lista){
     NoPiloto *aux = lista;
 
@@ -63,7 +61,6 @@ void listar_pilotos(NoPiloto *lista){
     }
 
 
-    while (aux != NULL){
         printf("Nome do piloto: %s\n", aux->piloto.nome);
         printf("Categoria do piloto: ");
         switch(aux->piloto.categoria){
@@ -77,7 +74,7 @@ void listar_pilotos(NoPiloto *lista){
                 printf("Pesado.\n");
                 break;
         }
-        
+
         printf("Velocidade: %d\n", aux->piloto.vel);
         printf("Quantidade de trofeus: %d\n", aux->piloto.trofeus);
         printf("STATUS DO PILOTO: ");
@@ -94,31 +91,45 @@ void listar_pilotos(NoPiloto *lista){
             }
         }
         
-    }
-NoPiloto* remover_piloto(NoPiloto *lista){
+NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
     NoPiloto* aux =  lista;
 
     if (aux == NULL){
         printf("ERRO!! LISTA VAZIA.\n");
-        return;
+        return lista;
     }
+    NoPiloto *fimremovidos = *removidos;
+    if(fimremovidos != NULL){
+        while (fimremovidos->proximo != NULL){
+            fimremovidos = fimremovidos->proximo;
+        }
+    }
+    
 
     while (aux != NULL){
         if(aux->piloto.status == 1){
-            NoPiloto *remove = aux;
-
-            if(aux->anterior != NULL){
-                aux->anterior->proximo = aux->proximo;
-            } else{
-                lista = aux->proximo;
-            }
-
-            if (aux->proximo != NULL){
-                aux->proximo->anterior = aux->anterior;
-            }
-
+            NoPiloto *remover = aux;
             aux = aux->proximo;
-            free(remove);
+
+
+            if(remover->anterior != NULL){
+                remover->anterior->proximo = remover->proximo;
+            } else{
+                lista = remover->proximo;
+            }
+
+            if (remover->proximo != NULL){
+                remover->proximo->anterior = remover->anterior;
+            }   
+            remover->anterior = fimremovidos;
+            remover->proximo = NULL;
+
+            if(fimremovidos != NULL){
+                fimremovidos->proximo = remover;
+            }else{
+                *removidos = remover;
+            }
+            fimremovidos = remover;
             printf("Piloto removido.");
 
         } else{
@@ -148,4 +159,71 @@ void listar_piloto_nome(NoPiloto* lista, char name[50]){
     printf("Piloto não encontrado.\n");
 
     return;
+}
+
+void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, int new_status){
+    NoPiloto *aux = *lista;
+    int choose;
+
+    if (aux == NULL){
+        printf("ERRO! LISTA VAZIA.\n");
+        return;
+    }
+
+    while (aux != NULL){
+
+        if(strcmp(aux->piloto.nome, name) == 0){
+            if(willatt == 1){ //Se o willatt for 1 ele atualiza manualmente, se for 0 ele atualiza os status automaticamente
+                printf("Escolha o que deseja atualizar: ");
+                printf("[1] para atualizar o nome.\n[2] para atualizar a categoria.\n[3] para atualizar a velocidade.\n");
+                scanf("%d", &choose);
+
+                switch (choose){
+                    case 1:{
+                        char newname[50];
+                        getchar();
+                        printf("Digite o nome novo: ");
+                        fgets(newname, sizeof(newname), stdin);
+                        newname[strcspn(newname, "\n")] = 0;
+                        strcpy(aux->piloto.nome, newname);
+                        break;
+                    }
+                    case 2:{
+                        int newcat;
+                        printf("Digite a nova categoria do piloto: ");
+                        while (scanf("%d", &newcat) != 1 || newcat < 1 || newcat >3){
+                            while (getchar() != '\n');
+                            printf("ERRO! DIGITE UMA ENTRADA VALIDA\n");
+                        }
+                        aux->piloto.categoria = newcat;
+                        break;
+                    }
+                    case 3:{
+                        int newvel;
+                        printf("Digite a nova velocidade do piloto: ");
+                        while (scanf("%d", &newvel) != 1 || newvel < 1 || newvel > 100){
+                            while (getchar() != '\n');
+                            printf("ERRO! DIGITE UMA ENTRADA VALIDA\n");
+                    
+                        }
+                        aux->piloto.vel = newvel;
+                        break;
+                    }
+                    default: 
+                        printf("Opção Inválida.");
+                        break;
+                }
+            }else if(willatt == 0){
+                aux->piloto.trofeus = new_trophy;
+                aux->piloto.status = new_status;
+            }
+            return; 
+
+        }else{
+            aux = aux->proximo;
+        }
+    }
+    printf("Piloto não encontrado.\n");
+
+
 }
