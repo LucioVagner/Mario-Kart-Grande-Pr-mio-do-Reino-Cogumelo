@@ -18,4 +18,20 @@ typedef struct NoPiloto{
 
 NoPiloto* criar_lista_pilotos();
 
+NoPiloto* cadastrar_piloto (NoPiloto *lista);
+
+void listar_pilotos(NoPiloto *lista);
+
+NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos);
+
+void listar_piloto_nome(NoPiloto* lista, char name[50]);
+
+void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, int new_status);
+
+void listar_suspensos (NoPiloto *removidos);
+
+void listar_categoria(NoPiloto *lista);
+
+void exibir_trofeu(NoPiloto *lista);
+
 #endif

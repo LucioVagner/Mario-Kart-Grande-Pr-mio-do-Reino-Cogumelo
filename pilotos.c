@@ -130,7 +130,7 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
                 *removidos = remover;
             }
             fimremovidos = remover;
-            printf("Piloto removido.");
+            printf("Piloto removido.\n");
 
         } else{
             aux = aux->proximo;
@@ -226,4 +226,65 @@ void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, in
     printf("Piloto não encontrado.\n");
 
 
+}
+
+void listar_suspensos (NoPiloto *removidos){
+    NoPiloto* aux = removidos;
+
+
+    printf("================== PILOTOS SUSPENSOS ==================\n\n");
+    if(aux == NULL){
+        printf("Não existe pilotos suspenso.\n");
+        return;
+    }
+    while(aux != NULL){
+
+        listar_pilotos(aux);
+        aux = aux->proximo;
+
+    }
+}
+
+void listar_categoria(NoPiloto *lista){
+    NoPiloto *aux = lista;
+    int choose;
+
+    printf("Escolha a categoria que deseja listar.\n\n[1] leve.\n[2] medio.\n[3] pesado.\n");
+    scanf("%d", &choose);
+    while(aux != NULL){
+        if(aux->piloto.categoria == choose){
+            listar_pilotos(aux);
+        }
+        aux = aux->proximo;
+ 
+    }
+    return;
+}
+
+void exibir_trofeu(NoPiloto *lista){
+    NoPiloto *aux = lista;
+    int max;
+
+    if (aux == NULL){
+        printf("ERRO! LISTA VAZIA.\n");
+        return;
+    }
+
+    max = aux->piloto.trofeus;
+    aux = aux->proximo;
+
+    while (aux != NULL){
+        if(aux->piloto.trofeus > max){
+            max = aux->piloto.trofeus;
+        }
+        aux = aux->proximo;
+    }
+
+    aux = lista;
+    while (aux != NULL){
+        if(aux->piloto.trofeus == max){
+            listar_piloto(aux);
+        }
+        aux = aux->proximo;
+    }
 }
