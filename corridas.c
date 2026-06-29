@@ -40,13 +40,28 @@ Corrida *cria_pistas(){
     return pistas;
 }
 
-void lista_pistas(Corrida *pista){
-    
+void lista_pistas(HeapCorridas *heap){
+    if(heap->tamanho == 0){
+        printf("Nenhuma pista disponível na Central Digital.\n");
+        return;
+    }
+
+    printf("\n------------------------------------------\n\n|\tPISTAS RESTANTES NA CENTRAL CORRIDAS\t|\n\n------------------------------------------\n");
+    for(int i = 0; i < heap->tamanho; i++){
+        printf("[%d] %s\nPerigo: %d\nVoltas: %d\n", i+1, heap->corridas[i].nome, heap->corridas[i].perigo, heap->corridas[i].voltas);   
+    }
 }
 
-void iniciar_heap(HeapCorridas *heap){
+void iniciar_heap(HeapCorridas *heap, Corrida *pistas){
     heap->tamanho = 0;
-    heap->capacidade = 0;
+    heap->capacidade = 5;
+
+
+    for(int i = 0; i < 5; i++){
+        heap->corridas[i] = pistas[i];
+        heap->tamanho++;
+        heapify_up(heap, i);
+    }
 }
 
 void heapify_up(HeapCorridas *heap, int i){
@@ -71,15 +86,34 @@ void heapify_down(HeapCorridas *heap, int i){
     if(esq < heap->tamanho && (heap->corridas[esq].perigo > heap->corridas[maior].perigo || (heap->corridas[esq].perigo == heap->corridas[maior].perigo && heap->corridas[esq].prioridade < heap->corridas[maior].prioridade))){
         maior = esq;
     }
-    if(dir < heap->tamanho && (heap->corridas[dir].perigo > heap->corridas[maior].perigo || (heap->corridas[dir].perigo == heap->cordidas[maior].perigo && heap->corridas[dir].prioridade < heap->corridas[maior].prioridade))){
+    if(dir < heap->tamanho && (heap->corridas[dir].perigo > heap->corridas[maior].perigo || (heap->corridas[dir].perigo == heap->corridas[maior].perigo && heap->corridas[dir].prioridade < heap->corridas[maior].prioridade))){
         maior = dir;
     }
 
     if (maior != i){
-        Corrida aux = heap->corridas[maior];
+        Corrida aux = heap->corridas[i];
         heap->corridas[i] = heap->corridas[maior];
         heap->corridas[maior] = aux;
 
         heapify_down(heap, maior);
     }
+}
+
+Corrida remover_corrida(HeapCorridas *heap){
+    if(heap->tamanho == 0){
+        printf("Nenhuma pista disponível na Central Digital.\n");
+        Corrida vazia = {"", 0, 0, 0, 0, 0};
+        return vazia;
+    }
+
+    Corrida topo = heap->corridas[0];
+    heap->corridas[0] = heap->corridas[heap->tamanho - 1];
+
+    heap->tamanho--;
+
+    if (heap->tamanho > 0){
+        heapify_down(heap, 0);
+    }
+
+    return topo;
 }
