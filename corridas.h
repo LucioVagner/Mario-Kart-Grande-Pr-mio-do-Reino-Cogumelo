@@ -17,4 +17,16 @@ typedef struct {
 
 } HeapCorridas;
 
+Corrida *cria_pistas();
+
+void lista_pistas(HeapCorridas *heap);
+
+void iniciar_heap(HeapCorridas *heap, Corrida *pistas);
+
+void heapify_up(HeapCorridas *heap, int i);
+
+void heapify_down(HeapCorridas *heap, int i);
+
+Corrida remover_corrida(HeapCorridas *heap);
+
 #endif
