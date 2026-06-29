@@ -1,13 +1,14 @@
 #ifndef PILOTOS_H
 #define PILOTOS_H
-
+#include "karts.h"
 
 typedef struct pilotos{
     char nome[50];
     int categoria;
     int vel;
     int trofeus;
-    int status; 
+    int status;
+    Kart kart;
 }Piloto;
 
 typedef struct NoPiloto{
