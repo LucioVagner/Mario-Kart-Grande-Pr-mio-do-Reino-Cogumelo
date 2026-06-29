@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pilotos.h"
-
+#include "karts.h"
 
 NoPiloto* criar_lista_pilotos(){
     return NULL;
@@ -15,7 +15,7 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
         return aux;
     }
     aux->proximo = NULL;
-    
+    aux->anterior = NULL;
     getchar();
     
     printf("Digite o nome do Piloto: ");
@@ -37,6 +37,12 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
     }
     aux->piloto.trofeus = 0;
     aux->piloto.status = 0;
+    aux->piloto.kart = select_kart();
+    
+    getchar();
+    printf("Digite o nome do seu kart: ");
+    fgets(aux->piloto.kart.nome, sizeof(aux->piloto.kart.nome), stdin);
+    aux->piloto.kart.nome[strcspn(aux->piloto.kart.nome, "\n")] = 0;
 
     if(lista == NULL){
         return aux;
@@ -77,6 +83,8 @@ void listar_pilotos(NoPiloto *lista){
 
         printf("Velocidade: %d\n", aux->piloto.vel);
         printf("Quantidade de trofeus: %d\n", aux->piloto.trofeus);
+        exibir_kart(aux);
+
         printf("STATUS DO PILOTO: ");
             switch(aux->piloto.status){
                 case 0:
@@ -176,7 +184,10 @@ void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, in
             if(willatt == 1){ //Se o willatt for 1 ele atualiza manualmente, se for 0 ele atualiza os status automaticamente
                 printf("Escolha o que deseja atualizar: ");
                 printf("[1] para atualizar o nome.\n[2] para atualizar a categoria.\n[3] para atualizar a velocidade.\n");
-                scanf("%d", &choose);
+                while(scanf("%d", &choose) != 1 || choose < 1 || choose > 3){
+                    getchar();
+                    printf("ERRO! DIGITE UMA ENTRADA VÁLIDA.\n");
+                }
 
                 switch (choose){
                     case 1:{
@@ -250,7 +261,10 @@ void listar_categoria(NoPiloto *lista){
     int choose;
 
     printf("Escolha a categoria que deseja listar.\n\n[1] leve.\n[2] medio.\n[3] pesado.\n");
-    scanf("%d", &choose);
+    while(scanf("%d", &choose) != 1 || choose < 1 || choose > 3){
+        getchar();
+        printf("ERRO! DIGITE UMA ENTRADA VÁLIDA.\n");
+    }
     while(aux != NULL){
         if(aux->piloto.categoria == choose){
             listar_pilotos(aux);
@@ -283,7 +297,7 @@ void exibir_trofeu(NoPiloto *lista){
     aux = lista;
     while (aux != NULL){
         if(aux->piloto.trofeus == max){
-            listar_piloto(aux);
+            listar_pilotos(aux);
         }
         aux = aux->proximo;
     }
