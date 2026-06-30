@@ -8,6 +8,7 @@ typedef struct pista{
     int clima;
     int status;
     int prioridade;
+    int itens[7];
 }Corrida;
 
 typedef struct {
