@@ -9,6 +9,8 @@ typedef struct pilotos{
     int trofeus;
     int status;
     Kart kart;
+    int item;
+    
 }Piloto;
 
 typedef struct NoPiloto{
