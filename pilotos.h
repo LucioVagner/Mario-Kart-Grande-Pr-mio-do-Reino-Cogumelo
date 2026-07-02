@@ -1,5 +1,6 @@
 #ifndef PILOTOS_H
 #define PILOTOS_H
+
 #include "karts.h"
 
 typedef struct pilotos{
