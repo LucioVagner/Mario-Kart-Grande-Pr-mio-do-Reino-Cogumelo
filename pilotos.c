@@ -83,7 +83,7 @@ void listar_pilotos(NoPiloto *lista){
 
         printf("Velocidade: %d\n", aux->piloto.vel);
         printf("Quantidade de trofeus: %d\n", aux->piloto.trofeus);
-        exibir_kart(aux);
+        exibir_kart(aux->piloto.kart);
 
         printf("STATUS DO PILOTO: ");
             switch(aux->piloto.status){

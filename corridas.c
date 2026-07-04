@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "pilotos.h"
 #include "karts.h"
 #include "corridas.h"

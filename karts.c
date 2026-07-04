@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "pilotos.h"
 #include "karts.h"
 
@@ -51,15 +52,15 @@ void listar_karts(Kart karts[], int tam){
     }
 }
 
-void exibir_kart(NoPiloto *lista){
-    printf("TIPO: %s\n", lista->piloto.kart.nome);
-        printf("Velocidade: %d\n", lista->piloto.kart.vel);
-        printf("Aceleração: %d\n", lista->piloto.kart.acel);
-        printf("Controle: %d\n", lista->piloto.kart.controle);
-        printf("Durabilidade: %d\n", lista->piloto.kart.durabil);
+void exibir_kart(Kart kart){
+        printf("TIPO: %s\n", kart.nome);
+        printf("Velocidade: %d\n", kart.vel);
+        printf("Aceleração: %d\n", kart.acel);
+        printf("Controle: %d\n", kart.controle);
+        printf("Durabilidade: %d\n", kart.durabil);
 }
 
-void att_kart_status(NoPiloto *lista, int status){
+void att_kart_status(Kart *kart, int status){
     
-    lista->piloto.kart.status = status;
+    kart->status = status;
 }
