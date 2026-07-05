@@ -195,6 +195,3 @@ void identify_item(HeapCorridas *central, Itens *lista){
     printf("\n======================================================================\n");
 
 }
-
-
-

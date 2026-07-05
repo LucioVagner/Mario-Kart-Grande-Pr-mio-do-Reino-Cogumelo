@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -std=c99
 
 TARGET = mario_kart_gp
 
-SRCS = main.c pilotos.c karts.c itens.c corridas.c
+SRCS = main.c pilotos.c karts.c itens.c corridas.c historico.c
 
 OBJS = $(SRCS:.c=.o)
 
