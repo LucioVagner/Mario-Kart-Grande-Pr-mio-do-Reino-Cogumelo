@@ -119,11 +119,11 @@ int sorteio(Itens *lista, int posicao){
 
 
     for(int i = 0; i < 7; i++){
-        inicio = (inicio + i) % 7;
+        int j = (inicio + i) % 7;
 
-        if(lista[inicio].rare == raridade && lista[inicio].quanti > 0){ //se a raridade sorteada e o item sorteado for igual ele decrementa e manda o indice
-            lista[inicio].quanti--;
-            return i;
+        if(lista[j].rare == raridade && lista[j].quanti > 0){ //se a raridade sorteada e o item sorteado for igual ele decrementa e manda o indice
+            lista[j].quanti--;
+            return j;
         }
     }
     
@@ -175,7 +175,7 @@ void identify_item(HeapCorridas *central, Itens *lista){
     visualizar_itens(lista);
     printf("Qual item deseja rastrear?\n ");
 
-    while(scanf("%d", &choose) != 1 || choose < 0 || choose > 6){
+    while(scanf("%d", &choose) != 1 || choose < 1 || choose > 7){
         getchar();
         printf("ERRO! Digite uma entrada válida.\n");
     }
@@ -184,13 +184,15 @@ void identify_item(HeapCorridas *central, Itens *lista){
 
     
     for(int i = 0; i < central->tamanho; i++){
-        if(central->corridas[i].itens[choose] > 0){
-            printf("Item na Corrida: %s | Quantidade em uso: %d\n", central->corridas[i].nome, central->corridas[i].itens[choose]);
+        if(central->corridas[i].itens[choose - 1] > 0){
+            printf("Item na Corrida: %s | Quantidade em uso: %d\n", central->corridas[i].nome, central->corridas[i].itens[choose - 1]);
             find = 0;
         }
     }
 
-    if(find == 1); printf("O item não está sendo usado em nenhuma corrida.\n");
+    if(find == 1){
+        printf("O item não está sendo usado em nenhuma corrida.\n");
+    } 
 
     printf("\n======================================================================\n");
 

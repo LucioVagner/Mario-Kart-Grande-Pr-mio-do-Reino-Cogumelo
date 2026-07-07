@@ -36,6 +36,7 @@ Corrida *cria_pistas(){
     for(int i = 0; i < 5; i++){
         pistas[i].clima = (rand() % 3 ) + 1;
         pistas[i].status = 0;
+        pistas[i].prioridade = i;
     }
 
     return pistas;
@@ -61,6 +62,7 @@ void iniciar_heap(HeapCorridas *heap, Corrida *pistas){
     for(int i = 0; i < 5; i++){
         heap->corridas[i] = pistas[i];
         heap->tamanho++;
+        heap->corridas[i].prioridade = i;
         heapify_up(heap, i);
     }
 }
@@ -84,10 +86,10 @@ void heapify_down(HeapCorridas *heap, int i){
     int dir = 2 * i + 2;
     int maior = i;
 
-    if(esq < heap->tamanho && (heap->corridas[esq].perigo > heap->corridas[maior].perigo || (heap->corridas[esq].perigo == heap->corridas[maior].perigo && heap->corridas[esq].prioridade < heap->corridas[maior].prioridade))){
+    if(esq < heap->tamanho && ((heap->corridas[esq].perigo > heap->corridas[maior].perigo ) || (heap->corridas[esq].perigo == heap->corridas[maior].perigo && heap->corridas[esq].prioridade < heap->corridas[maior].prioridade))){
         maior = esq;
     }
-    if(dir < heap->tamanho && (heap->corridas[dir].perigo > heap->corridas[maior].perigo || (heap->corridas[dir].perigo == heap->corridas[maior].perigo && heap->corridas[dir].prioridade < heap->corridas[maior].prioridade))){
+    if(dir < heap->tamanho && ((heap->corridas[dir].perigo > heap->corridas[maior].perigo )|| (heap->corridas[dir].perigo == heap->corridas[maior].perigo && heap->corridas[dir].prioridade < heap->corridas[maior].prioridade))){
         maior = dir;
     }
 

@@ -90,9 +90,9 @@ void rivals(Historico *topo){
     
     while (aux != NULL){
         for (int i = 0; i < aux->num_pilots; i++){
-            int find = 0;
             for(int j = i + 1; j < aux->num_pilots; j++){
-               for(int k = 0; k < cont_rivais; k++){
+                int find = 0;
+                for(int k = 0; k < cont_rivais; k++){
                     if((strcmp(rivais[k].pilot1, aux->posicao[i].nome) == 0 && strcmp(rivais[k].pilot2, aux->posicao[j].nome) == 0 || (strcmp(rivais[k].pilot1, aux->posicao[j].nome) == 0 && strcmp(rivais[k].pilot2, aux->posicao[i].nome) == 0))){
                         rivais[k].encontros++;
                         find = 1;
@@ -143,6 +143,14 @@ void maior_participacao(Historico *atual, NoPiloto *lista){
         aux_lista = aux_lista->proximo;
     }
 
-    printf("O piloto com maior taxa de vitória é: %s\nParticipações: %d", nome, maior);
+    printf("O piloto com maior taxa de participações é: %s\nParticipações: %d", nome, maior);
 
+}
+
+void listar_rank(Historico *hist){
+    Historico *aux = hist;
+    printf("\nCORRIDA: %s | Temp: %d\n", aux->corrida.nome, aux->temp);
+    for(int i = 0; i < aux->num_pilots; i++){
+        printf("%dº lugar: %s\n", i+1, aux->posicao[i].nome);
+    }
 }
