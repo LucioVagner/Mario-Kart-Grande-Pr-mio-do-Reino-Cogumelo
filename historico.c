@@ -6,7 +6,7 @@
 #include "pilotos.h"
 #include "karts.h"
 #include "itens.h"
-
+//lista os vencedores pelo historico
 void listar_vencedores (Historico *fila){
     Historico *aux = fila;
     if (aux == NULL){
@@ -25,7 +25,7 @@ void listar_vencedores (Historico *fila){
         aux = aux->proximo;
     }
 }
-
+//ao fim da corrida chama esse codigo pra registrar todos esses valores no historico
 Historico *registro_fim(Historico *fila, Corrida corrida, int temp, Piloto posicao[], int num_pilots){
     Historico *att = (Historico *)malloc(sizeof(Historico));
 
@@ -43,7 +43,7 @@ Historico *registro_fim(Historico *fila, Corrida corrida, int temp, Piloto posic
 
     return att;
 }
-
+//faz uma consulta so da temporada atual
 void consulta_temp(Historico *atual, int temp){
     Historico *aux = atual;
     int find = 0;
@@ -59,7 +59,7 @@ void consulta_temp(Historico *atual, int temp){
         printf("Nenhum registro para essa temporada.\n");
     }
 }
-
+//ve com o item mais utilizado ate o momento, quase sempre vai ser itens comuns
 void item_usados(Historico *atual){
     int maior = 0, cont[7] = {0, 0, 0, 0, 0, 0, 0};
     char *names[7] = {"Banana", "Casco Verde", "Cogumelo", "Casco Vermelho", "Bob-omb", "Raio", "Bullet Bill"};
@@ -81,7 +81,7 @@ void item_usados(Historico *atual){
     printf("Item mais utilizado: %s\nUsado: %d vezes", names[maior], cont[maior]);
 
 }
-
+//confere no historico quais pilotos se enfrentaram mais vezes durante todas as temporadas
 void rivals(Historico *topo){
     Rivalidade rivais[50];
     int cont_rivais = 0;
@@ -90,9 +90,9 @@ void rivals(Historico *topo){
     
     while (aux != NULL){
         for (int i = 0; i < aux->num_pilots; i++){
-            int find = 0;
             for(int j = i + 1; j < aux->num_pilots; j++){
-               for(int k = 0; k < cont_rivais; k++){
+                int find = 0;
+                for(int k = 0; k < cont_rivais; k++){
                     if((strcmp(rivais[k].pilot1, aux->posicao[i].nome) == 0 && strcmp(rivais[k].pilot2, aux->posicao[j].nome) == 0 || (strcmp(rivais[k].pilot1, aux->posicao[j].nome) == 0 && strcmp(rivais[k].pilot2, aux->posicao[i].nome) == 0))){
                         rivais[k].encontros++;
                         find = 1;
@@ -117,7 +117,7 @@ void rivals(Historico *topo){
         printf("Maior rivalidade: %s vs %s\nNúmero de corridas disputadas: %d",rivais[maior].pilot1, rivais[maior].pilot2, rivais[maior].encontros);
 
 }
-
+//ve quem é o piloto que mais participou de corridas
 void maior_participacao(Historico *atual, NoPiloto *lista){
     NoPiloto *aux_lista = lista;
     char nome[50];
@@ -143,6 +143,14 @@ void maior_participacao(Historico *atual, NoPiloto *lista){
         aux_lista = aux_lista->proximo;
     }
 
-    printf("O piloto com maior taxa de vitória é: %s\nParticipações: %d", nome, maior);
+    printf("O piloto com maior taxa de participações é: %s\nParticipações: %d", nome, maior);
 
+}
+// lista todas as corridas com seus resultados
+void listar_rank(Historico *hist){
+    Historico *aux = hist;
+    printf("\nCORRIDA: %s | Temp: %d\n", aux->corrida.nome, aux->temp);
+    for(int i = 0; i < aux->num_pilots; i++){
+        printf("%dº lugar: %s\n", i+1, aux->posicao[i].nome);
+    }
 }

@@ -3,7 +3,7 @@
 #include <string.h>
 #include "pilotos.h"
 #include "karts.h"
-
+//inicializa os karts e faz o player selecionar o tipo de kart
 Kart select_kart(){
     Kart karts[3];
     int choose;
@@ -39,7 +39,7 @@ Kart select_kart(){
 
     return karts[choose];
 }
-
+//lista os karts para a seleção 
 void listar_karts(Kart karts[], int tam){
     printf("====================== STATUS DOS KARTS ======================\n\n");
     for(int i = 0; i < tam; i++){
@@ -51,7 +51,7 @@ void listar_karts(Kart karts[], int tam){
         printf("========================================\n\n");
     }
 }
-
+//lista kart por piloto
 void exibir_kart(Kart kart){
         printf("TIPO: %s\n", kart.nome);
         printf("Velocidade: %d\n", kart.vel);
@@ -59,7 +59,7 @@ void exibir_kart(Kart kart){
         printf("Controle: %d\n", kart.controle);
         printf("Durabilidade: %d\n", kart.durabil);
 }
-
+//atualiza o status do kart pos corrida
 void att_kart_status(Kart *kart, int status){
     
     kart->status = status;

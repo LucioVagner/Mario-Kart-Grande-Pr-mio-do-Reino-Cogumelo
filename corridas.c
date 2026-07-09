@@ -5,7 +5,7 @@
 #include "pilotos.h"
 #include "karts.h"
 #include "corridas.h"
-
+//funcao para inicializar as pistas no começo do codigo, assim que iniciar o programa
 Corrida *cria_pistas(){
     Corrida *pistas = (Corrida*) malloc(5 * sizeof(Corrida));
 
@@ -36,11 +36,12 @@ Corrida *cria_pistas(){
     for(int i = 0; i < 5; i++){
         pistas[i].clima = (rand() % 3 ) + 1;
         pistas[i].status = 0;
+        pistas[i].prioridade = i;
     }
 
     return pistas;
 }
-
+//lista todas as pistas para serem simuladas
 void lista_pistas(HeapCorridas *heap){
     if(heap->tamanho == 0){
         printf("Nenhuma pista disponível na Central Digital.\n");
@@ -52,7 +53,7 @@ void lista_pistas(HeapCorridas *heap){
         printf("[%d] %s\nPerigo: %d\nVoltas: %d\n", i+1, heap->corridas[i].nome, heap->corridas[i].perigo, heap->corridas[i].voltas);   
     }
 }
-
+//inicia as prioridade das corridas
 void iniciar_heap(HeapCorridas *heap, Corrida *pistas){
     heap->tamanho = 0;
     heap->capacidade = 5;
@@ -61,10 +62,11 @@ void iniciar_heap(HeapCorridas *heap, Corrida *pistas){
     for(int i = 0; i < 5; i++){
         heap->corridas[i] = pistas[i];
         heap->tamanho++;
-        heapify_up(heap, i);
+        heap->corridas[i].prioridade = i;
+        heapify_up(heap, i); //entra na funçao para colocar a com a maior prioridade no topo do heap
     }
 }
-
+//funcao pra colocar no topo
 void heapify_up(HeapCorridas *heap, int i){
     int pai = (i-1)/2;
 
@@ -74,7 +76,7 @@ void heapify_up(HeapCorridas *heap, int i){
             heap->corridas[i] = heap->corridas[pai];
             heap->corridas[pai] = aux;
 
-            heapify_up(heap, pai);
+            heapify_up(heap, pai); //se chama recursivamente
         }
     }
 }
@@ -84,19 +86,19 @@ void heapify_down(HeapCorridas *heap, int i){
     int dir = 2 * i + 2;
     int maior = i;
 
-    if(esq < heap->tamanho && (heap->corridas[esq].perigo > heap->corridas[maior].perigo || (heap->corridas[esq].perigo == heap->corridas[maior].perigo && heap->corridas[esq].prioridade < heap->corridas[maior].prioridade))){
+    if(esq < heap->tamanho && ((heap->corridas[esq].perigo > heap->corridas[maior].perigo ) || (heap->corridas[esq].perigo == heap->corridas[maior].perigo && heap->corridas[esq].prioridade < heap->corridas[maior].prioridade))){
         maior = esq;
     }
-    if(dir < heap->tamanho && (heap->corridas[dir].perigo > heap->corridas[maior].perigo || (heap->corridas[dir].perigo == heap->corridas[maior].perigo && heap->corridas[dir].prioridade < heap->corridas[maior].prioridade))){
+    if(dir < heap->tamanho && ((heap->corridas[dir].perigo > heap->corridas[maior].perigo )|| (heap->corridas[dir].perigo == heap->corridas[maior].perigo && heap->corridas[dir].prioridade < heap->corridas[maior].prioridade))){
         maior = dir;
     }
 
-    if (maior != i){
+    if (maior != i){ //mudou de lugar
         Corrida aux = heap->corridas[i];
         heap->corridas[i] = heap->corridas[maior];
         heap->corridas[maior] = aux;
 
-        heapify_down(heap, maior);
+        heapify_down(heap, maior); //precisa conferir todos
     }
 }
 
@@ -117,4 +119,50 @@ Corrida remover_corrida(HeapCorridas *heap){
     }
 
     return topo;
+}
+
+void menu_corrida(HeapCorridas *central){
+    int opcao;
+    char name[50];
+     do{
+        printf("\n========================== Corridas =================================\n");
+        printf("| [1] Cadastrar piloto.                                              |\n");
+        printf("| [2] Remover piloto.                                                |\n");
+        printf("| [3] Listar pilotos.                                                |\n");
+        printf("| [4] Consultar piloto.                                              |\n");
+        printf("| [5] Listar pilotos por categoria.                                  |\n");
+        printf("| [6] Listar pilotos suspensos.                                      |\n");
+        printf("| [7] Listar piloto com mais trofeus.                                |\n");
+        printf("| [0] para voltar.                                                   |\n");
+        printf("|                                                                    |\n======================================================================\n");
+        printf("Digite o que deseja fazer: ");
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 7){
+            getchar();
+            printf("ERRO! DIGITE NOVAMENTE.\n");
+        }
+        switch(opcao){
+            case 1:
+               
+            case 2:
+                
+                break;
+            case 3:
+                
+                break;
+            case 4:
+                
+                break;
+            case 5:
+                
+                break;
+            case 6:
+                
+                break;
+            case 7:
+                
+                break;
+            case 0:
+                break;
+        }
+    }while(opcao != 0);
 }
