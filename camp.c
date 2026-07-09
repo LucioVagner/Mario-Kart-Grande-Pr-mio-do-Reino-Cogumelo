@@ -126,7 +126,7 @@ void ranking(Camp *raiz, int *cont){
 
     ranking(raiz->esq, cont);
 }
-
+//atualiza a pontuaçãod e cada piloto pos corrida, possivelmente com for
 Camp* att_pont(Camp *raiz, char nome[], int pont){
     Camp *pilot = search(raiz, nome);
     int aux;
@@ -143,7 +143,7 @@ Camp* att_pont(Camp *raiz, char nome[], int pont){
     return raiz;
 
 }
-
+//remove um piloto caso ele tenha sido acidentado ou excluido
 Camp *remover(Camp *raiz, int ponto, char nome[]){
     Camp *temp;
     if(raiz == NULL){
@@ -186,7 +186,7 @@ Camp *remover(Camp *raiz, int ponto, char nome[]){
 
     
 }
-
+//faz a busca na arvore pelo nome do piloto
 Camp *search(Camp *raiz, char nome[]){
     Camp *aux;
 
@@ -205,14 +205,14 @@ Camp *search(Camp *raiz, char nome[]){
 
     return search(raiz->dir, nome);
 }
-
+//função auxiliar pra achar o menor nó, sendo sempre o menor a esquerda
 Camp* menor(Camp *no){
     if(no->esq == NULL){
         return no;
     }
     return menor(no->esq);
 }
-
+//funcao pra imprimir o campeao da temporada quando ela chegar ao fim
 void champion(Camp *raiz){
     Camp *aux;
     if(raiz == NULL){
@@ -228,7 +228,7 @@ void champion(Camp *raiz){
 
     printf("Campeão da temporada: %s\t|Pontos: %d", aux->nome, aux->pontos);
 }
-
+//funcao pra imprimir o rank da temporada atual sem ela ter acabado
 void rank_tot(Camp *raiz, int *cont, int *last_pont){
     if(raiz == NULL){
         return;
@@ -246,7 +246,7 @@ void rank_tot(Camp *raiz, int *cont, int *last_pont){
 
     rank_tot(raiz->esq, cont, last_pont);
 }
-
+//funcao pra consultar a pontuação de um piloto em especifico
 void consult_player(Camp *raiz, char nome[], NoPiloto *lista){
     Camp *pilot = search(raiz, nome);
     NoPiloto *aux = lista;
@@ -265,7 +265,7 @@ void consult_player(Camp *raiz, char nome[], NoPiloto *lista){
 
 
 }
-
+//calculo da pontuaçao pos corrida
 int calc_pos(int posicao){
     if(posicao >= 3 && posicao < 6){
         return 12 - posicao;

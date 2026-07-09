@@ -6,7 +6,6 @@
 typedef struct pilotos{
     char nome[50];
     int categoria;
-    int vel;
     int trofeus;
     int status;
     Kart kart;
@@ -38,4 +37,5 @@ void listar_categoria(NoPiloto *lista);
 
 void exibir_trofeu(NoPiloto *lista);
 
+void menu_pilotos(NoPiloto **lista, NoPiloto **removidos);
 #endif

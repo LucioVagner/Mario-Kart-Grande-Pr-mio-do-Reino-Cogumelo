@@ -6,7 +6,7 @@
 #include "pilotos.h"
 #include "corridas.h"
 
-
+//mostra todos os tipos de itens, so o basico
 void visualizar_itens(Itens *lista){
     if(lista == NULL){
         printf("SEM ITEMS DISPONÍVEIS. ADICIONE ITENS PARA VISUALIZAR.\n");
@@ -32,7 +32,7 @@ void visualizar_itens(Itens *lista){
     }
     printf("\n========================================================================\n");
 }
-
+//inicializa os itens no inicio do programa
 Itens *inicializar_itens(){
     Itens *lista = (Itens*)malloc(7 * sizeof(Itens));
 
@@ -73,7 +73,7 @@ Itens *inicializar_itens(){
 
     return lista;
 }
-
+//adiciona itens no estoque
 Itens *add_item(Itens *lista){
     int choose, quanti;
 
@@ -89,7 +89,7 @@ Itens *add_item(Itens *lista){
 
     return lista;
 }
-
+//joga itens pra corrida
 void item_corrida(Itens *lista, Corrida *corrida, int i){
     if(lista[i].quanti <= 0){
         return;
@@ -97,14 +97,14 @@ void item_corrida(Itens *lista, Corrida *corrida, int i){
     lista[i].quanti--;
     corrida->itens[i]++;
 }
-
+//devolve caso o item n tenha sido usado
 void devolver(Itens *lista, Corrida *corrida){
     for(int i = 0; i < 7; i++){
         lista[i].quanti += corrida->itens[i];
         corrida->itens[i] = 0;
     }
 }
-
+//sorteia o numero do item que vai ser jogado pra cada piloto
 int sorteio(Itens *lista, int posicao){
     int raridade, inicio = rand() % 7;
 
@@ -138,7 +138,7 @@ int sorteio(Itens *lista, int posicao){
     return -1;
 }
 
-
+//entra na central da corrida e confere qual item ta na corrida
 void itens_uso(HeapCorridas *central){
     int find = 1;
     char *nomes_itens[7] = {"Banana", "Casco Verde", "Cogumelo", "Casco Vermelho", "Bob-omb", "Raio", "Bullet Bill"};
@@ -167,7 +167,7 @@ void itens_uso(HeapCorridas *central){
     printf("\n=====================================================================\n");
 
 }
-
+//procura onde um item especifico ta sendo usado
 void identify_item(HeapCorridas *central, Itens *lista){
     int choose, find = 1;
 

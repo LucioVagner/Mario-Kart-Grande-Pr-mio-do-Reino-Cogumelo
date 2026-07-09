@@ -1,4 +1,4 @@
- #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "oficina.h"
@@ -6,8 +6,9 @@
 #include "karts.h"
 #include "itens.h"
 #include "historico.h"
+#include "portabilidade.h"
 
-
+//funcao de colocar karts na oficina
 void put_kart(FilaOficina *atual, Kart kart, char pilot[]){
     Nofila *aux = (Nofila*)malloc (sizeof(Nofila));
     if(aux == NULL){
@@ -32,7 +33,7 @@ void put_kart(FilaOficina *atual, Kart kart, char pilot[]){
 
     
 }
-
+//funcao de colocar karts destruidos na oficina
 void put_destroyed(HeapOficina *heap, Kart kart, char pilot[]){
     if(heap->tam >= 10){
         printf("OFICINA CHEIA, VOLTE MAIS TARDE.\n");
@@ -44,7 +45,7 @@ void put_destroyed(HeapOficina *heap, Kart kart, char pilot[]){
 
     heapup_oficina(heap, heap->tam - 1);
 }
-
+//funcao de heap uf normal
 void heapup_oficina(HeapOficina *heap, int tam){
     int pai = (tam - 1)/2;
 
@@ -62,7 +63,7 @@ void heapup_oficina(HeapOficina *heap, int tam){
     }
 
 }
-
+//funcao de heapdown normal tbm
 void heapdown_oficina(HeapOficina *heap, int tam){
     int esq = 2 * tam + 1;
     int dir = 2 * tam + 2;
@@ -90,7 +91,7 @@ void heapdown_oficina(HeapOficina *heap, int tam){
 
 }
 
-
+//funcao de reparar o kart, apenas muda o valor do status do kart com maior prioridade, nao pode escolher qual kart arrumar
 Kart repair_destructed(HeapOficina *heap){
     if (heap->tam == 0){
         printf("Nenhum kart na oficina.\n");
@@ -103,14 +104,14 @@ Kart repair_destructed(HeapOficina *heap){
     heap->tam--;
 
     if (heap->tam > 0){
-        heapdown_oficina(heap, 0);
+        heapdown_oficina(heap, 0); //manda o ultimo valor do heap para abaixar ela ate o final de novo e encontrar o maior valor 
     }
 
     repaired.status = 0;
     return repaired;
 
 }
-
+//mesma coisa que o de cima so que aquele era pra heap e esse é pra FIFO 
 Kart repair_damaged(FilaOficina *fila){
     if(fila->inicio == NULL){
         printf("Nenhum kart na oficina.\n");
@@ -132,18 +133,31 @@ Kart repair_damaged(FilaOficina *fila){
 
 
 }
+//passa por todos os karts danificados e destruidos da oficina com um for, so o basico
 
 void consulta_oficina(Oficina *oficina){
-    printf("----------------DESTRUIDOS-----------------\n");
-    for(int i = 0; i < oficina->destruct.tam; i++){
+    limpar_tela();
+    printf("\n----------------DESTRUIDOS-----------------\n");
+    if(oficina->destruct.tam == 0){
+            printf("SEM KARTS DESTRUIDOS NA OFICINA.\n");
+    }else{
+        for(int i = 0; i < oficina->destruct.tam; i++){
+        
         printf("Piloto: %s\t|Kart: %s\n", oficina->destruct.piloto[i], oficina->destruct.karts[i].nome);
     }
+}
 
-    printf("----------------DANIFICADOS-----------------\n");
-    Nofila *aux = oficina->damaged.inicio;
-    while(aux != NULL){
-        printf("Piloto: %s\t|Kart: %s", aux->piloto, aux->kart.nome);
-        aux = aux->proximo;
+    printf("\n----------------DANIFICADOS-----------------\n");
+    if(oficina->damaged.tam == 0){
+            printf("SEM KARTS DANIFICADOS NA OFICINA.\n");
+            esperar(5000);
+    }else {
+        Nofila *aux = oficina->damaged.inicio;
+        while(aux  != NULL){
+        
+            printf("Piloto: %s\t|Kart: %s\n", aux->piloto, aux->kart.nome);
+            aux = aux->proximo;
+        }
     }
 
 }
