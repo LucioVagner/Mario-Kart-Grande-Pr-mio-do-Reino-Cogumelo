@@ -25,4 +25,6 @@ int sorteio(Itens *lista, int posicao);
 void itens_uso(HeapCorridas *central);
 
 void identify_item(HeapCorridas *central, Itens *lista);
+
+void menu_item(Itens *itens, HeapCorridas *heap);
 #endif

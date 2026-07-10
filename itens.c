@@ -197,3 +197,43 @@ void identify_item(HeapCorridas *central, Itens *lista){
     printf("\n======================================================================\n");
 
 }
+
+void menu_item(Itens *itens, HeapCorridas *heap){
+    int opcao;
+    limpar_tela();
+    do {
+        printf("\n========================= ITENS ==============================\n");
+        printf("\n| [1] para listar os itens.                                          |\n");
+        printf("| [2] para adicionar item ao estoque                                 |\n");
+        printf("| [3] para ver os itens que estão sendo usados.                      |\n");
+        printf("|                                                                    |\n======================================================================\n");
+
+        printf("Digite o que deseja fazer: ");
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 3){
+            getchar();
+            printf("ERRO! DIGITE NOVAMENTE.\n");
+        }
+
+        switch(opcao){
+            case 1:
+                limpar_buffer();
+                visualizar_itens(itens);
+                printf("Aperte ENTER para retornar...");
+                getchar();
+                limpar_tela();
+                break;
+            case 2:
+                itens = add_item(itens);
+                limpar_tela();
+                break;
+            case 3:
+                itens_uso(heap);
+                esperar(5000);
+                limpar_tela();
+                break;
+            case 0:
+                break;
+        }
+    } while(opcao != 0);
+
+}

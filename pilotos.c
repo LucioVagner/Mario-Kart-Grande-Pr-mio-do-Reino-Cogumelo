@@ -336,6 +336,7 @@ void exibir_trofeu(NoPiloto *lista){
 void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
     int opcao;
     char name[50];
+    limpar_tela();
     do{
         printf("\n=========================== Pilotos ==================================\n");
         printf("| [1] Cadastrar piloto.                                              |\n");

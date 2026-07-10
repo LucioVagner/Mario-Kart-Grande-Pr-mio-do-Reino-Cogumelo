@@ -39,4 +39,6 @@ Kart repair_destructed(HeapOficina *heap);
 Kart repair_damaged(FilaOficina *fila);
 
 void consulta_oficina(Oficina *oficina);
+
+void menu_oficina(Oficina *oficina);
 #endif

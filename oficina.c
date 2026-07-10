@@ -108,6 +108,7 @@ Kart repair_destructed(HeapOficina *heap){
     }
 
     repaired.status = 0;
+    printf("Reparado com sucesso.\n");
     return repaired;
 
 }
@@ -160,4 +161,45 @@ void consulta_oficina(Oficina *oficina){
         }
     }
 
+}
+
+void menu_oficina(Oficina *oficina){
+    int opcao;
+    Kart reparado;
+    limpar_tela();
+    do {
+        printf("\n========================= OFICINA ==============================\n");
+        printf("\n| [1] para ver a oficina.                                            |\n");
+        printf("| [2] para reparar destruidos.                                       |\n");
+        printf("| [3] para reparar danificados.                                      |\n");
+        printf("|                                                                    |\n======================================================================\n");
+
+        printf("Digite o que deseja fazer: ");
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 3){
+            getchar();
+            printf("ERRO! DIGITE NOVAMENTE.\n");
+        }
+
+        switch(opcao){
+            case 1:
+                limpar_buffer();
+                consulta_oficina(oficina);
+                printf("Aperte ENTER para retornar...");
+                getchar();
+                limpar_tela();
+                break;
+            case 2:
+                reparado = repair_destructed(&oficina->destruct);
+                printf("Kart %s reparado com sucesso.\n", reparado.nome);
+                limpar_tela();
+                break;
+            case 3:
+                reparado = repair_damaged(&oficina->damaged);
+                printf("Kart %s reparado com sucesso.\n", reparado.nome);
+                limpar_tela();
+                break;
+            case 0:
+                break;
+        }
+    } while(opcao != 0);
 }

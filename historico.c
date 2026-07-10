@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "portabilidade.h"
 #include "historico.h"
 #include "corridas.h"
 #include "pilotos.h"
@@ -10,7 +11,7 @@
 void listar_vencedores (Historico *fila){
     Historico *aux = fila;
     if (aux == NULL){
-        printf("ERRO! HISTÓRICO VAZIO");
+        printf("ERRO! HISTÓRICO VAZIO.\n");
         return;
     }
     printf("\n================= TEMPORADA %d =================\n", aux->temp);
@@ -87,7 +88,10 @@ void rivals(Historico *topo){
     int cont_rivais = 0;
     Historico * aux = topo;
     int maior = 0;
-    
+    if(topo == NULL){
+        printf("SEM CORRIDAS DISPUTADAS.\n");
+        return;
+    }
     while (aux != NULL){
         for (int i = 0; i < aux->num_pilots; i++){
             for(int j = i + 1; j < aux->num_pilots; j++){
@@ -153,4 +157,62 @@ void listar_rank(Historico *hist){
     for(int i = 0; i < aux->num_pilots; i++){
         printf("%dº lugar: %s\n", i+1, aux->posicao[i].nome);
     }
+}
+
+
+void menu_historico(Historico *historico, int temp, NoPiloto *lista){
+    int opcao;
+    limpar_tela();
+    do {
+        printf("\n=========================== HISTÓRICO ================================\n");
+        printf("\n| [1] para listar os vencedores.                                     |\n");
+        printf("| [2] para listar a temporada.                                       |\n");
+        printf("| [3] para consultar os itens mais usados.                           |\n");
+        printf("| [4] para exibir a maior rivalidade(mais corridas disputadas contra)|\n");
+        printf("| [5] para exibir a maior participação.                              |\n");
+        printf("| [0] para sair.                                                     |\n");
+        printf("|                                                                    |\n======================================================================\n");
+
+        printf("Digite o que deseja fazer: ");
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 5){
+            getchar();
+            printf("ERRO! DIGITE NOVAMENTE.\n");
+        }
+
+        switch(opcao){
+            case 1:
+                limpar_buffer();
+                listar_vencedores(historico);
+                printf("Aperte ENTER para retornar...");
+                getchar();
+                limpar_tela();
+                break;
+            case 2:
+                limpar_buffer();
+                consulta_temp(historico, temp);
+                printf("Aperte ENTER para retornar...");
+                getchar();
+                limpar_tela();
+                break;
+            case 3:
+                item_usados(historico);
+                esperar(5000);
+                limpar_tela();
+                break;
+            case 4:
+                rivals(historico);
+                esperar(5000);
+                limpar_tela();
+                break;
+
+            case 5:
+                maior_participacao(historico, lista);
+                esperar(5000);
+                limpar_tela();
+                break;
+            case 0:
+                break;
+        }
+    } while(opcao != 0);
+
 }

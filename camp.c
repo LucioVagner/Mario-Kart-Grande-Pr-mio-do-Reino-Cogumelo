@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "portabilidade.h"
 #include "historico.h"
 #include "corridas.h"
 #include "pilotos.h"
@@ -276,4 +277,54 @@ int calc_pos(int posicao){
         return 0;
     }
     return 18 - 3 * posicao;
+}
+void menu_camp(Camp *campeonato, int *contador, NoPiloto *lista){
+    int opcao, last = -1;
+    char nome[50];
+    limpar_tela();
+    do {
+        printf("\n ================= CAMPEONATO =====================\n");
+        printf("| [1] para imprimir o rank total.                                    |\n");
+        printf("| [2] para imprimir o rank atual.                                    |\n");
+        printf("| [3] para imprimir o atual campeão.                                 |\n");
+        printf("| [4] para consultar a pontuação de um jogador.                      |\n");
+        printf("| [0] para sair.                                                     |\n");
+        printf("|                                                                    |\n======================================================================\n");
+
+        printf("Digite o que deseja fazer: ");
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 4){
+            getchar();
+            printf("ERRO! DIGITE NOVAMENTE.\n");
+        }
+
+        switch(opcao){
+            case 1:
+                limpar_buffer();
+                ranking(campeonato, contador);
+                printf("Aperte ENTER para retornar...");
+                getchar();
+                limpar_tela();
+                break;
+            case 2:
+                limpar_buffer();
+                rank_tot(campeonato, contador, &last);
+                printf("Aperte ENTER para retornar...");
+                getchar();
+                limpar_tela();
+                break;
+            case 3:
+                champion(campeonato);
+                esperar(5000);
+                limpar_tela();
+                break;
+            case 4:
+                consult_player(campeonato, nome, lista);
+                esperar(5000);
+                limpar_tela();
+                break;
+
+            case 0:
+                break;
+            }
+        }while(opcao != 0);
 }

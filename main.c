@@ -35,8 +35,9 @@ int main(){
     oficina.destruct.tam = 0;
     oficina.damaged.fim = NULL;
     oficina.damaged.tam = 0;
-    
+    int contador = 0;
     int opcao;
+    int temp = 1;
     limpar_tela();
     do {
         printf("\n ================= SIMULADOR DE CORRIDAS DE KART =====================\n");
@@ -45,6 +46,7 @@ int main(){
         printf("| [3] para consultar a oficina.                                      |\n");
         printf("| [4] para menu do campeonato.                                       |\n");
         printf("| [5] para menu do histórico.                                        |\n");
+        printf("| [6] para menu dos itens.                                           |\n");
         printf("| [0] para sair.                                                     |\n");
         printf("|                                                                    |\n======================================================================\n");
 
@@ -63,35 +65,21 @@ int main(){
                 
                 break;
             case 3:
-                consulta_oficina(&oficina);
+                menu_oficina(&oficina);
+                limpar_tela();
                 break;
             case 4:
-                if(central->tamanho > 0){
-                    int i;
-                    printf("Digite a posição do piloto: ");
-                    scanf("%d", &i);
-
-                    int item = sorteio(estoque, i);
-
-                    if(item != -1){
-                        printf("O piloto na posição %d tirou um %s\n", i, estoque[item].nome);
-                        central->corridas[0].itens[item]++;
-
-                    }else{
-                        printf("Estoque de todos os itens vazio.\n");
-
-                    }
-                    
-                }else{
-                        printf("Nenhuma pista ativa.\n");
-                }
+                menu_camp(campeonato, &contador, lista);
+                limpar_tela();
                 break;
 
             case 5:
-                itens_uso(central);
+                menu_historico(historico, temp, lista);
+                limpar_tela();
                 break;
             case 6:
-                identify_item(central, estoque);
+                menu_item(estoque, central);
+                limpar_tela();
                 break;
             case 0:
                 break;

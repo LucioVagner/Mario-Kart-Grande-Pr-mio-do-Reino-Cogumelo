@@ -1,6 +1,6 @@
 #ifndef CAMP_H
 #define CAMP_H
-
+#include "pilotos.h"
 typedef struct camp{
     char nome[50];
     int pontos;
@@ -44,4 +44,6 @@ void rank_tot(Camp *raiz, int *cont, int *last_pont);
 void consult_player(Camp *raiz, char nome[], NoPiloto *lista);
 
 int calc_pos(int posicao);
+
+void menu_camp(Camp *campeonato, int *contador, NoPiloto *lista);
 #endif
