@@ -4,8 +4,7 @@ CFLAGS = -Wall -Wextra -std=c99 -Iinclude
 
 TARGET = mario_kart_gp
 
-
-SRCS = src/main.c src/pilotos.c src/karts.c src/itens.c src/corridas.c src/historico.c src/oficina.c src/camp.c
+SRCS = src/main.c src/pilotos.c src/karts.c src/itens.c src/corridas.c src/historico.c src/oficina.c src/camp.c src/portabilidade.c
 
 OBJS = $(patsubst src/%.c, obj/%.o, $(SRCS))
 
@@ -19,7 +18,6 @@ obj/%.o: src/%.c | obj
 
 obj:
 	mkdir -p obj
-
 
 clean:
 	rm -rf obj $(TARGET)
