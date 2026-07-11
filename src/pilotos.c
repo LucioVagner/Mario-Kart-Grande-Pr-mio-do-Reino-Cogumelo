@@ -104,6 +104,7 @@ void listar_pilotos_all(NoPiloto *lista){
     }
 
     while(aux != NULL){
+        printf("---------------------------------------------\n");
         printf("Nome do piloto: %s\n", aux->piloto.nome);
         printf("Categoria do piloto: ");
         switch(aux->piloto.categoria){
@@ -133,13 +134,15 @@ void listar_pilotos_all(NoPiloto *lista){
                     printf("ACIDENTADO.\n");
                     break;
             }
+        printf("---------------------------------------------\n");
         aux = aux->proximo;
         }
     }
 //função de remoção dos pilotos
 NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
     NoPiloto* aux =  lista;
-
+    int num;
+    char nome[50];
     if (aux == NULL){
         printf("ERRO!! LISTA VAZIA.\n");
         return lista;
@@ -151,36 +154,78 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
         }
     }
     
+    printf("[1] Remover piloto ACIDENTADO.\t[2] EXCLUIR piloto da sua escolha.\n");
+    while(scanf("%d", &num) != 1 || num < 1 || num > 2){
+        limpar_buffer();
+        printf("ERRO! DIGITE UMA ENTRADA VÁLIDA.\n");
+    }
+    if(num == 1){
+        while (aux != NULL){
+            if(aux->piloto.status == 1){    //se tiver danificado ele cria uma variavel auxiliar extra pra aquele ponteiro especifico
+                NoPiloto *remover = aux; 
+                aux = aux->proximo; //avança o aux pra dar o free no remover
 
-    while (aux != NULL){
-        if(aux->piloto.status == 1){    //se tiver danificado ele cria uma variavel auxiliar extra pra aquele ponteiro especifico
-            NoPiloto *remover = aux; 
-            aux = aux->proximo; //avança o aux pra dar o free no remover
 
+                if(remover->anterior != NULL){
+                    remover->anterior->proximo = remover->proximo; //se tiver algo antes ele desconecta
+                } else{
+                    lista = remover->proximo;
+                    if(lista != NULL){
+                        lista->anterior = NULL;
+                    }
+                }
 
-            if(remover->anterior != NULL){
-                remover->anterior->proximo = remover->proximo; //se tiver algo antes ele desconecta
+                if (remover->proximo != NULL){
+                    remover->proximo->anterior = remover->anterior; //se tiver algo depois ele desconecta 
+                }   
+                remover->anterior = fimremovidos; //
+                remover->proximo = NULL;
+
+                if(fimremovidos != NULL){
+                    fimremovidos->proximo = remover; //fim removidos proximo ja era null?
+                }else{
+                    *removidos = remover; 
+                }
+                fimremovidos = remover;
+                printf("Piloto removido.\n");
+
             } else{
-                lista = remover->proximo; 
+                aux = aux->proximo;
             }
-
-            if (remover->proximo != NULL){
-                remover->proximo->anterior = remover->anterior; //se tiver algo depois ele desconecta 
-            }   
-            remover->anterior = fimremovidos; //
-            remover->proximo = NULL;
-
-            if(fimremovidos != NULL){
-                fimremovidos->proximo = remover; //fim removidos proximo ja era null?
-            }else{
-                *removidos = remover; 
-            }
-            fimremovidos = remover;
-            printf("Piloto removido.\n");
-
-        } else{
-            aux = aux->proximo;
         }
+    }else{
+        listar_pilotos(lista);
+        limpar_buffer();
+        printf("Digite o nome do piloto que deseja excluir: ");
+        fgets(nome, sizeof(nome), stdin);
+        nome[strcspn(nome, "\n")] = '\0';
+        while(aux != NULL){
+            if(strcmp(aux->piloto.nome, nome) == 0){
+                NoPiloto *remover = aux;
+                aux = aux->proximo;
+
+                if(remover->anterior != NULL){
+                    remover->anterior->proximo = remover->proximo;
+                }else {
+                    lista = remover->proximo;
+                    if(lista != NULL){
+                        lista->anterior = NULL;
+                    }
+                }
+                
+
+                if(remover->proximo != NULL){
+                    remover->proximo->anterior = remover->anterior;
+                }
+                free(remover);
+                printf("Piloto removido.\n");
+                return lista;
+            }else{
+                aux = aux->proximo;
+            }
+        }
+        printf("NENHUM PILOTO COM ESSE NOME ENCONTRADO.\n");
+        
     }
 
     return lista;
@@ -328,76 +373,10 @@ void exibir_trofeu(NoPiloto *lista){
     while (aux != NULL){
         if(aux->piloto.trofeus == max){
             listar_pilotos(aux);
+            return;
         }
         aux = aux->proximo;
     }
 }
 
 
-void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
-    int opcao;
-    char name[50];
-    do{
-        printf("\n=========================== Pilotos ==================================\n");
-        printf("| [1] Cadastrar piloto.                                              |\n");
-        printf("| [2] Remover piloto.                                                |\n");
-        printf("| [3] Listar pilotos.                                                |\n");
-        printf("| [4] Consultar piloto.                                              |\n");
-        printf("| [5] Listar pilotos por categoria.                                  |\n");
-        printf("| [6] Listar pilotos suspensos.                                      |\n");
-        printf("| [7] Listar piloto com mais trofeus.                                |\n");
-        printf("| [0] para voltar.                                                   |\n");
-        printf("|                                                                    |\n======================================================================\n");
-        printf("Digite o que deseja fazer: ");
-        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 7){
-            getchar();
-            printf("ERRO! DIGITE NOVAMENTE.\n");
-        }
-        switch(opcao){
-            case 1:
-                (*lista) = cadastrar_piloto(*lista);
-                limpar_tela();
-                break;
-            case 2:
-                remover_piloto(*lista, removidos);
-                limpar_tela();
-                break;
-            case 3:
-                limpar_buffer();
-                listar_pilotos_all(*lista);
-                printf("Aperte ENTER para retornar...");
-                getchar();
-                limpar_tela();
-                break;
-            case 4:
-                limpar_buffer();
-                printf("Digite o nome do Piloto que deseja buscar: ");
-                fgets(name, sizeof(name), stdin);
-                name[strcspn(name, "\n")] = '\0';
-                listar_piloto_nome(*lista, name);
-                esperar(5000);
-                limpar_tela();
-                break;
-            case 5:
-                limpar_buffer();
-                listar_categoria(*lista);
-                printf("Aperte ENTER para retornar...");
-                getchar();
-                limpar_tela();
-                break;
-            case 6:
-                limpar_buffer();
-                listar_suspensos(*removidos);
-                printf("Aperte ENTER para retornar...");
-                getchar();
-                break;
-            case 7:
-                exibir_trofeu(*lista);
-                esperar(5000);
-                limpar_tela();
-                break;
-            case 0:
-                break;
-        }
-    }while(opcao != 0);
-}

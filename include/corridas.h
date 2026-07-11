@@ -32,5 +32,4 @@ Corrida remover_corrida(HeapCorridas *heap);
 
 void exibir_corrida(Corrida corrida);
 
-void menu_corrida(HeapCorridas *central);
 #endif

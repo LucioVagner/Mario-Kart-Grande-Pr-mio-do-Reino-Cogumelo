@@ -7,6 +7,7 @@
 #include "karts.h"
 #include "itens.h"
 #include "camp.h"
+#include "portabilidade.h"
 
 //FUNÇÃO PRA DEFINIR A ALTURA DA ARVORE
 int altura(Camp *no){
@@ -213,10 +214,10 @@ Camp* menor(Camp *no){
     return menor(no->esq);
 }
 //funcao pra imprimir o campeao da temporada quando ela chegar ao fim
-void champion(Camp *raiz){
+void champion(Camp *raiz, HeapCorridas *central){
     Camp *aux;
-    if(raiz == NULL){
-        printf("Nenhuma corrida realizada.\n");
+    if(raiz == NULL || central->tamanho != 0){
+        printf("SEM CAMPEÃO AINDA.\n");
         return;
     }
     
@@ -226,7 +227,7 @@ void champion(Camp *raiz){
         aux = aux->dir;
     }
 
-    printf("Campeão da temporada: %s\t|Pontos: %d", aux->nome, aux->pontos);
+    printf("Campeão da temporada: %s\t| Pontos: %d", aux->nome, aux->pontos);
 }
 //funcao pra imprimir o rank da temporada atual sem ela ter acabado
 void rank_tot(Camp *raiz, int *cont, int *last_pont){
@@ -277,3 +278,4 @@ int calc_pos(int posicao){
     }
     return 18 - 3 * posicao;
 }
+

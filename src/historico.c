@@ -6,6 +6,7 @@
 #include "pilotos.h"
 #include "karts.h"
 #include "itens.h"
+#include "portabilidade.h"
 //lista os vencedores pelo historico
 void listar_vencedores (Historico *fila){
     Historico *aux = fila;
@@ -13,14 +14,15 @@ void listar_vencedores (Historico *fila){
         printf("ERRO! HISTÓRICO VAZIO");
         return;
     }
-    printf("\n================= TEMPORADA %d =================\n", aux->temp);
+    printf("\n================================== TEMPORADA %d ==================================\n", aux->temp);
     while (aux != NULL){
-        
+        printf("\n----------------------------------------------------------------\n");
         printf("Corrida: %s\n", aux->corrida.nome);
         printf("Vencedor: %s\n", aux->posicao[0].nome);
-        for(int i = 1; i < aux->num_pilots; i++){
-            printf("Posição[%d]: %s\t", i, aux->posicao[i].nome);
+        for(int i = 0; i < aux->num_pilots; i++){
+            printf("Posição[%d]: %s\t", i+1, aux->posicao[i].nome);
         }
+        printf("\n----------------------------------------------------------------\n");
         printf("\n");
         aux = aux->proximo;
     }
@@ -47,6 +49,8 @@ Historico *registro_fim(Historico *fila, Corrida corrida, int temp, Piloto posic
 void consulta_temp(Historico *atual, int temp){
     Historico *aux = atual;
     int find = 0;
+    printf("Digite a temporada que deseja conferir: ");
+    scanf("%d", &temp);
     while (aux != NULL){
         if(aux->temp == temp){
             find = 1;

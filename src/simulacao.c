@@ -6,6 +6,9 @@
 #include "karts.h"
 #include "corridas.h"
 #include "itens.h"
+#include "historico.h"
+#include "camp.h"
+#include "oficina.h"
 
 //formulando o desempenho
 
@@ -144,6 +147,10 @@ void simular_corrida(Corrida *corrida, NoPiloto *participantes[], int num_partic
     aplicar_evento(evento, ranking, num_participantes);
 
     qsort(ranking, num_participantes, sizeof(ResultadoPiloto), comparar_resultado);
+
+    for(int i = 0; i < num_participantes; i++){
+        ranking[i].resultado = calc_pos(i+1);
+    }
 }
 
 void exibir_ranking(Corrida *corrida, ResultadoPiloto ranking[], int num_participantes){
@@ -157,4 +164,69 @@ void exibir_ranking(Corrida *corrida, ResultadoPiloto ranking[], int num_partici
         printf("\n");
     }
     printf("==================================================================\n");
+}
+
+void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato){
+    if(central->tamanho == 0){
+        printf("Nenhuma pista disponivel na Central Digital.\n");
+    } else {
+            Corrida atual = remover_corrida(central);
+            exibir_corrida(atual);
+
+            //seleciona ate 4 pilotos disponiveis (status == 0) percorrendo a lista dupla
+            NoPiloto *participantes[4];
+            int num_participantes = 0;
+            NoPiloto *aux = lista;
+            while(aux != NULL && num_participantes < 4){
+                if(aux->piloto.status == 0){
+                    int item = sorteio(estoque, num_participantes);
+                    participantes[num_participantes] = aux;
+                    participantes[num_participantes]->piloto.item = item;
+                    if(item != -1){
+                        atual.itens[item]++;
+                    }
+                    num_participantes++;
+                    }
+                    aux = aux->proximo;
+                }
+
+                if(num_participantes < 2){
+                    printf("Pilotos disponiveis insuficientes (minimo 2). Corrida cancelada.\n");
+                } else {
+                    // fase de simulacao
+                    ResultadoPiloto ranking[4];
+                    simular_corrida(&atual, participantes, num_participantes, estoque, ranking);
+                    exibir_ranking(&atual, ranking, num_participantes);
+                    //integracao campeonato (arvore AVL)
+                    int pontos_pos[4] = {15, 12, 10, 8};
+                    for(int i = 0; i < num_participantes; i++){
+                        if(search((*campeonato), ranking[i].no->piloto.nome) == NULL){
+                            //att_pont() nao cadastra piloto novo (so atualiza quem ja existe),
+                            //entao na primeira corrida do piloto inseri
+                            (*campeonato) = inserir((*campeonato), ranking[i].no->piloto.nome, pontos_pos[i]);
+                            } else {
+                                (*campeonato) = att_pont((*campeonato), ranking[i].no->piloto.nome, pontos_pos[i]);
+                            }
+                        }
+
+                        // integracao historico
+                        Piloto posicoes_hist[4];
+                        for(int i = 0; i < num_participantes; i++){
+                            posicoes_hist[i] = ranking[i].no->piloto;
+                        }
+                        (*historico) = registro_fim((*historico), atual, 1, posicoes_hist, num_participantes);
+
+                        // integracao oficina e danos, conforme os eventos sofridos
+                        for(int i = 0; i < num_participantes; i++){
+                            if(ranking[i].evento == EVENTO_BOBOMB){
+                                ranking[i].no->piloto.kart.status = 2; //Destruido
+                                ranking[i].no->piloto.status = 1;      //Suspenso
+                                put_destroyed(&oficina->destruct, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
+                            } else if(ranking[i].evento == EVENTO_BANANA){
+                                ranking[i].no->piloto.kart.status = 1; //Danificado
+                                put_kart(&oficina->damaged, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
+                            }
+                        }
+                    }
+                }
 }

@@ -1,5 +1,7 @@
 #ifndef CAMP_H
 #define CAMP_H
+#include "pilotos.h"
+#include "corridas.h"
 
 typedef struct camp{
     char nome[50];
@@ -37,7 +39,7 @@ Camp *search(Camp *raiz, char nome[]);
 
 Camp* menor(Camp *no);
 
-void champion(Camp *raiz);
+void champion(Camp *raiz, HeapCorridas *central);
 
 void rank_tot(Camp *raiz, int *cont, int *last_pont);
 

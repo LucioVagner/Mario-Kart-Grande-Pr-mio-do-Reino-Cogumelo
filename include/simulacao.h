@@ -4,6 +4,9 @@
 #include "pilotos.h"
 #include "corridas.h"
 #include "itens.h"
+#include "historico.h"
+#include "oficina.h"
+#include "camp.h"
 
 #define MAX_PARTICIPANTES 10
 
@@ -42,5 +45,7 @@ void aplicar_evento(TipoEvento evento, ResultadoPiloto ranking[], int num_partic
 void simular_corrida(Corrida *corrida, NoPiloto *participantes[], int num_participantes, Itens *estoque, ResultadoPiloto ranking[]);
 
 void exibir_ranking(Corrida *corrida, ResultadoPiloto ranking[], int num_participantes);
+
+void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato);
 
 #endif

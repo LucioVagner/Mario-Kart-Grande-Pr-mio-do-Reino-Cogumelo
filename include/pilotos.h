@@ -37,5 +37,5 @@ void listar_categoria(NoPiloto *lista);
 
 void exibir_trofeu(NoPiloto *lista);
 
-void menu_pilotos(NoPiloto **lista, NoPiloto **removidos);
+void listar_pilotos_all(NoPiloto *lista);
 #endif

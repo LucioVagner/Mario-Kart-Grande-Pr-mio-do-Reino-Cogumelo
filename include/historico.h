@@ -31,4 +31,5 @@ void maior_participacao(Historico *atual, NoPiloto *lista);
 
 void listar_rank(Historico *hist);
 
+
 #endif
