@@ -5,6 +5,8 @@
 #include "pilotos.h"
 #include "karts.h"
 #include "corridas.h"
+#include "portabilidade.h"
+
 //funcao para inicializar as pistas no começo do codigo, assim que iniciar o programa
 Corrida *cria_pistas(){
     Corrida *pistas = (Corrida*) malloc(5 * sizeof(Corrida));
@@ -123,43 +125,39 @@ Corrida remover_corrida(HeapCorridas *heap){
 
 void menu_corrida(HeapCorridas *central){
     int opcao;
-    char name[50];
-     do{
-        printf("\n========================== Corridas =================================\n");
-        printf("| [1] Cadastrar piloto.                                              |\n");
-        printf("| [2] Remover piloto.                                                |\n");
-        printf("| [3] Listar pilotos.                                                |\n");
-        printf("| [4] Consultar piloto.                                              |\n");
-        printf("| [5] Listar pilotos por categoria.                                  |\n");
-        printf("| [6] Listar pilotos suspensos.                                      |\n");
-        printf("| [7] Listar piloto com mais trofeus.                                |\n");
+
+    do{
+        printf("\n========================== Corridas ==================================\n");
+        printf("| [1] Visualizar pistas restantes na Central.                        |\n");
+        printf("| [2] Preparar proxima corrida (remove a de maior prioridade).       |\n");
         printf("| [0] para voltar.                                                   |\n");
         printf("|                                                                    |\n======================================================================\n");
         printf("Digite o que deseja fazer: ");
-        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 7){
-            getchar();
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 2){
+            limpar_buffer();
             printf("ERRO! DIGITE NOVAMENTE.\n");
         }
+
         switch(opcao){
             case 1:
-               
+                lista_pistas(central);
+                printf("\nAperte ENTER para retornar...");
+                limpar_buffer();
+                getchar();
+                limpar_tela();
+                break;
             case 2:
-                
-                break;
-            case 3:
-                
-                break;
-            case 4:
-                
-                break;
-            case 5:
-                
-                break;
-            case 6:
-                
-                break;
-            case 7:
-                
+                if(central->tamanho == 0){
+                    printf("Nenhuma pista disponivel na Central Digital.\n");
+                } else {
+                    Corrida atual = remover_corrida(central);
+                    exibir_corrida(atual);
+                    /*repassar 'atual' para a Fase de
+                       Simulacao (pilotos/karts/itens), que exige ponteiros
+                       não disponíveis nesta assinatura. */
+                }
+                esperar(5000);
+                limpar_tela();
                 break;
             case 0:
                 break;
