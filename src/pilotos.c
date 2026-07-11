@@ -35,6 +35,7 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
     }
     aux->piloto.trofeus = 0;
     aux->piloto.status = 0;
+    aux->piloto.item = -1;
     aux->piloto.kart = select_kart(); //vai selecionar o tipo de kart do piloto e depois pedir o nome
     
     getchar();

@@ -6,7 +6,6 @@
 #include "karts.h"
 #include "corridas.h"
 #include "portabilidade.h"
-
 //funcao para inicializar as pistas no começo do codigo, assim que iniciar o programa
 Corrida *cria_pistas(){
     Corrida *pistas = (Corrida*) malloc(5 * sizeof(Corrida));
@@ -107,7 +106,7 @@ void heapify_down(HeapCorridas *heap, int i){
 Corrida remover_corrida(HeapCorridas *heap){
     if(heap->tamanho == 0){
         printf("Nenhuma pista disponível na Central Digital.\n");
-        Corrida vazia = {"", 0, 0, 0, 0, 0, {0}}; 
+        Corrida vazia = {"", 0, 0, 0, 0, {0}};
         return vazia;
     }
 
@@ -123,8 +122,10 @@ Corrida remover_corrida(HeapCorridas *heap){
     return topo;
 }
 
- void exibir_corrida(Corrida corrida){
+//exibe os detalhes completos de uma corrida retirada do topo do heap
+void exibir_corrida(Corrida corrida){
     char *climas[4] = {"", "Ensolarado", "Chuvoso", "Nevando"};
+
     printf("\n========================= CORRIDA PREPARADA =========================\n");
     printf("Pista: %s\n", corrida.nome);
     printf("Numero de Voltas: %d\n", corrida.voltas);
@@ -135,41 +136,42 @@ Corrida remover_corrida(HeapCorridas *heap){
     printf("=======================================================================\n");
 }
 
-
-/*void menu_corrida(HeapCorridas *central){
+void menu_corrida(HeapCorridas *central){
     int opcao;
+
     do{
         printf("\n========================== Corridas ==================================\n");
-        printf("| [1] Visualizar pistas restantes na Central.                        |\n");        
-        printf("| [2] Preparar proxima corrida (remove a de maior prioridade).       |\n");        
-        printf("| [0] para voltar.                                                   |\n");        
-        printf("|                                                                    |\n======================================================================\n");        
-        printf("Digite o que deseja fazer: ");        
-        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 2){            
-            limpar_buffer();            
-            printf("ERRO! DIGITE NOVAMENTE.\n");        
-        }        
-        switch(opcao){            
-            case 1:                
-                lista_pistas(central);                
-                printf("\nAperte ENTER para retornar...");                
-                limpar_buffer();                
-                getchar();                
-                limpar_tela();                
-                break;            
-            case 2:                
-                if(central->tamanho == 0){                    
-                    printf("Nenhuma pista disponivel na Central Digital.\n");                
-                } else {                    
-                    Corrida atual = remover_corrida(central);                    
-                    exibir_corrida(atual);                    
-                    /* repassar 'atual' para a Fase de Simulacao                 
-                }                
-                esperar(5000);                
-                limpar_tela();                
-                break;            
-            case 0:                
-                break;        
-        }    
+        printf("| [1] Visualizar pistas restantes na Central.                        |\n");
+        printf("| [2] Preparar proxima corrida (remove a de maior prioridade).       |\n");
+        printf("| [0] para voltar.                                                   |\n");
+        printf("|                                                                    |\n======================================================================\n");
+        printf("Digite o que deseja fazer: ");
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 2){
+            limpar_buffer();
+            printf("ERRO! DIGITE NOVAMENTE.\n");
+            printf("Digite o que deseja fazer: ");
+        }
+
+        switch(opcao){
+            case 1:
+                lista_pistas(central);
+                printf("\nAperte ENTER para retornar...");
+                limpar_buffer();
+                getchar();
+                limpar_tela();
+                break;
+            case 2:
+                if(central->tamanho == 0){
+                    printf("Nenhuma pista disponivel na Central Digital.\n");
+                } else {
+                    Corrida atual = remover_corrida(central);
+                    exibir_corrida(atual);
+                }
+                esperar(5000);
+                limpar_tela();
+                break;
+            case 0:
+                break;
+        }
     }while(opcao != 0);
-} */
+}

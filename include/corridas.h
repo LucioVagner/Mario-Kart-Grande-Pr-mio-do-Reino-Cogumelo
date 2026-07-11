@@ -31,5 +31,6 @@ void heapify_down(HeapCorridas *heap, int i);
 Corrida remover_corrida(HeapCorridas *heap);
 
 void exibir_corrida(Corrida corrida);
-//void menu_corrida(HeapCorridas *central);
+
+void menu_corrida(HeapCorridas *central);
 #endif
