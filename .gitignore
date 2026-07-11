@@ -1,0 +1,6 @@
+mario_kart
+obj/
+*.o
+*~
+*.swp
+*.log

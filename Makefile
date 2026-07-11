@@ -1,20 +1,25 @@
 CC = gcc
 
-CFLAGS = -Wall -Wextra -std=c99
+CFLAGS = -Wall -Wextra -std=c99 -Iinclude
 
 TARGET = mario_kart_gp
 
-SRCS = main.c pilotos.c karts.c itens.c corridas.c historico.c oficina.c camp.c
 
-OBJS = $(SRCS:.c=.o)
+SRCS = src/main.c src/pilotos.c src/karts.c src/itens.c src/corridas.c src/historico.c src/oficina.c src/camp.c
+
+OBJS = $(patsubst src/%.c, obj/%.o, $(SRCS))
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
 
-%.o: %.c
+obj/%.o: src/%.c | obj
 	$(CC) $(CFLAGS) -c $< -o $@
 
+obj:
+	mkdir -p obj
+
+
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -rf obj $(TARGET)

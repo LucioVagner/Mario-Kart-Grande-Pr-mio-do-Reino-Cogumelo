@@ -2,6 +2,7 @@
 #define ITENS_H
 #include "corridas.h"
 
+
 typedef struct item{
     char nome[50];
     int power;

@@ -5,6 +5,7 @@
 #include "karts.h"
 #include "pilotos.h"
 #include "corridas.h"
+#include "portabilidade.h"
 
 //mostra todos os tipos de itens, so o basico
 void visualizar_itens(Itens *lista){
