@@ -107,7 +107,7 @@ void heapify_down(HeapCorridas *heap, int i){
 Corrida remover_corrida(HeapCorridas *heap){
     if(heap->tamanho == 0){
         printf("Nenhuma pista disponível na Central Digital.\n");
-        Corrida vazia = {"", 0, 0, 0, 0, 0};
+        Corrida vazia = {"", 0, 0, 0, 0, 0, {0}}; // Correção do warning aqui!
         return vazia;
     }
 
@@ -123,44 +123,54 @@ Corrida remover_corrida(HeapCorridas *heap){
     return topo;
 }
 
+// ESTA FUNÇÃO PRECISA ESTAR AQUI (ANTES DO MENU)
+static void exibir_corrida(Corrida corrida){
+    char *climas[4] = {"", "Ensolarado", "Chuvoso", "Nevando"};
+    printf("\n========================= CORRIDA PREPARADA =========================\n");
+    printf("Pista: %s\n", corrida.nome);
+    printf("Numero de Voltas: %d\n", corrida.voltas);
+    printf("Nivel de Perigo: %d\n", corrida.perigo);
+    if(corrida.clima >= 1 && corrida.clima <= 3){
+        printf("Condicao Climatica: %s\n", climas[corrida.clima]);
+    }
+    printf("=======================================================================\n");
+}
+
+// NOVO MENU
 void menu_corrida(HeapCorridas *central){
     int opcao;
-
     do{
         printf("\n========================== Corridas ==================================\n");
-        printf("| [1] Visualizar pistas restantes na Central.                        |\n");
-        printf("| [2] Preparar proxima corrida (remove a de maior prioridade).       |\n");
-        printf("| [0] para voltar.                                                   |\n");
-        printf("|                                                                    |\n======================================================================\n");
-        printf("Digite o que deseja fazer: ");
-        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 2){
-            limpar_buffer();
-            printf("ERRO! DIGITE NOVAMENTE.\n");
-        }
-
-        switch(opcao){
-            case 1:
-                lista_pistas(central);
-                printf("\nAperte ENTER para retornar...");
-                limpar_buffer();
-                getchar();
-                limpar_tela();
-                break;
-            case 2:
-                if(central->tamanho == 0){
-                    printf("Nenhuma pista disponivel na Central Digital.\n");
-                } else {
-                    Corrida atual = remover_corrida(central);
-                    exibir_corrida(atual);
-                    /*repassar 'atual' para a Fase de
-                       Simulacao (pilotos/karts/itens), que exige ponteiros
-                       não disponíveis nesta assinatura. */
-                }
-                esperar(5000);
-                limpar_tela();
-                break;
-            case 0:
-                break;
-        }
+        printf("| [1] Visualizar pistas restantes na Central.                        |\n");        
+        printf("| [2] Preparar proxima corrida (remove a de maior prioridade).       |\n");        
+        printf("| [0] para voltar.                                                   |\n");        
+        printf("|                                                                    |\n======================================================================\n");        
+        printf("Digite o que deseja fazer: ");        
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 2){            
+            limpar_buffer();            
+            printf("ERRO! DIGITE NOVAMENTE.\n");        
+        }        
+        switch(opcao){            
+            case 1:                
+                lista_pistas(central);                
+                printf("\nAperte ENTER para retornar...");                
+                limpar_buffer();                
+                getchar();                
+                limpar_tela();                
+                break;            
+            case 2:                
+                if(central->tamanho == 0){                    
+                    printf("Nenhuma pista disponivel na Central Digital.\n");                
+                } else {                    
+                    Corrida atual = remover_corrida(central);                    
+                    exibir_corrida(atual);                    
+                    /* TODO(próxima missão): repassar 'atual' para a Fase de Simulacao */                
+                }                
+                esperar(5000);                
+                limpar_tela();                
+                break;            
+            case 0:                
+                break;        
+        }    
     }while(opcao != 0);
 }
