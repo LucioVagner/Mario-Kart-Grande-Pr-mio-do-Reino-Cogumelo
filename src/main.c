@@ -75,7 +75,7 @@ int main(){
                 limpar_tela();
                 break;
             case 5:
-                /* historico (sem prototipo de menu_historico em historico.h). */
+                
                 menu_historico(historico, temp, lista);
                 limpar_tela();
                 break;
