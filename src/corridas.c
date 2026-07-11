@@ -107,7 +107,7 @@ void heapify_down(HeapCorridas *heap, int i){
 Corrida remover_corrida(HeapCorridas *heap){
     if(heap->tamanho == 0){
         printf("Nenhuma pista disponível na Central Digital.\n");
-        Corrida vazia = {"", 0, 0, 0, 0, 0, {0}}; // Correção do warning aqui!
+        Corrida vazia = {"", 0, 0, 0, 0, 0, {0}}; 
         return vazia;
     }
 
@@ -123,7 +123,6 @@ Corrida remover_corrida(HeapCorridas *heap){
     return topo;
 }
 
-// ESTA FUNÇÃO PRECISA ESTAR AQUI (ANTES DO MENU)
 static void exibir_corrida(Corrida corrida){
     char *climas[4] = {"", "Ensolarado", "Chuvoso", "Nevando"};
     printf("\n========================= CORRIDA PREPARADA =========================\n");
@@ -136,7 +135,7 @@ static void exibir_corrida(Corrida corrida){
     printf("=======================================================================\n");
 }
 
-// NOVO MENU
+
 void menu_corrida(HeapCorridas *central){
     int opcao;
     do{
@@ -164,7 +163,7 @@ void menu_corrida(HeapCorridas *central){
                 } else {                    
                     Corrida atual = remover_corrida(central);                    
                     exibir_corrida(atual);                    
-                    /* TODO(próxima missão): repassar 'atual' para a Fase de Simulacao */                
+                    /* repassar 'atual' para a Fase de Simulacao */                
                 }                
                 esperar(5000);                
                 limpar_tela();                
