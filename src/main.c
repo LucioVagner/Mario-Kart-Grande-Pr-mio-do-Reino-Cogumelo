@@ -47,56 +47,43 @@ int main(){
         printf("| [5] para menu do histórico.                                        |\n");
         printf("| [0] para sair.                                                     |\n");
         printf("|                                                                    |\n======================================================================\n");
+printf("Digite o que deseja fazer: ");
+while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 5){
+    limpar_buffer();
+    printf("ERRO! DIGITE NOVAMENTE.\n");
+}
 
-        printf("Digite o que deseja fazer: ");
-        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 6){
-            getchar();
-            printf("ERRO! DIGITE NOVAMENTE.\n");
-        }
-
-        switch(opcao){
-            case 1:
-                menu_pilotos(&lista, &removidos);
-                limpar_tela();
-                break;
-            case 2:
-                
-                break;
-            case 3:
-                consulta_oficina(&oficina);
-                break;
-            case 4:
-                if(central->tamanho > 0){
-                    int i;
-                    printf("Digite a posição do piloto: ");
-                    scanf("%d", &i);
-
-                    int item = sorteio(estoque, i);
-
-                    if(item != -1){
-                        printf("O piloto na posição %d tirou um %s\n", i, estoque[item].nome);
-                        central->corridas[0].itens[item]++;
-
-                    }else{
-                        printf("Estoque de todos os itens vazio.\n");
-
-                    }
-                    
-                }else{
-                        printf("Nenhuma pista ativa.\n");
-                }
-                break;
-
-            case 5:
-                itens_uso(central);
-                break;
-            case 6:
-                identify_item(central, estoque);
-                break;
-            case 0:
-                break;
-        }
-    } while(opcao != 0);
+switch(opcao){
+    case 1:
+        menu_pilotos(&lista, &removidos);
+        limpar_tela();
+        break;
+    case 2:
+        menu_corrida(central);
+        limpar_tela();
+        break;
+    case 3:
+        consulta_oficina(&oficina);
+        printf("\nAperte ENTER para retornar...");
+        limpar_buffer();
+        getchar();
+        limpar_tela();
+        break;
+    case 4:
+        
+        printf("Menu do campeonato ainda nao implementado.\n");
+        esperar(3000);
+        limpar_tela();
+        break;
+    case 5:
+        
+        printf("Menu do historico ainda nao implementado.\n");
+        esperar(3000);
+        limpar_tela();
+        break;
+    case 0:
+        break;
+}}while(opcao != 0);
 
     free(estoque);
     free(central);
