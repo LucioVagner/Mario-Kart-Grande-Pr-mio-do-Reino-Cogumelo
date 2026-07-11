@@ -123,7 +123,7 @@ Corrida remover_corrida(HeapCorridas *heap){
     return topo;
 }
 
-static void exibir_corrida(Corrida corrida){
+ void exibir_corrida(Corrida corrida){
     char *climas[4] = {"", "Ensolarado", "Chuvoso", "Nevando"};
     printf("\n========================= CORRIDA PREPARADA =========================\n");
     printf("Pista: %s\n", corrida.nome);
@@ -136,7 +136,7 @@ static void exibir_corrida(Corrida corrida){
 }
 
 
-void menu_corrida(HeapCorridas *central){
+/*void menu_corrida(HeapCorridas *central){
     int opcao;
     do{
         printf("\n========================== Corridas ==================================\n");
@@ -163,7 +163,7 @@ void menu_corrida(HeapCorridas *central){
                 } else {                    
                     Corrida atual = remover_corrida(central);                    
                     exibir_corrida(atual);                    
-                    /* repassar 'atual' para a Fase de Simulacao */                
+                    /* repassar 'atual' para a Fase de Simulacao                 
                 }                
                 esperar(5000);                
                 limpar_tela();                
@@ -172,4 +172,4 @@ void menu_corrida(HeapCorridas *central){
                 break;        
         }    
     }while(opcao != 0);
-}
+} */
