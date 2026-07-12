@@ -21,7 +21,7 @@ int main(){
      //mudei a logica da main Kart *karts = NULL;
     Historico *historico = NULL;
     Camp *campeonato = NULL;
-    
+    Camp *total = NULL;
     Itens *estoque = inicializar_itens();
     HeapCorridas *central = (HeapCorridas*) malloc(sizeof(HeapCorridas));
     Corrida *pistas = cria_pistas();
@@ -38,22 +38,26 @@ int main(){
     oficina.damaged.tam = 0;
     int temp = 1;
     int opcao;
-    int contador = 0;
     limpar_tela();
     do {
-        printf("\n================== SIMULADOR DE CORRIDAS DE KART =====================\n");
+        printf(RED BOLD"\n================== SIMULADOR DE CORRIDAS DE KART =====================\n");
+        printf(RESET);
+        printf("|                                                                    |\n");
         printf("| [1] para menu dos pilotos.                                         |\n");
         printf("| [2] para menu das corridas.                                        |\n");
         printf("| [3] para consultar a oficina.                                      |\n");
         printf("| [4] para menu do campeonato.                                       |\n");
         printf("| [5] para menu do histórico.                                        |\n");
+        printf("| [6] para conferir o estoque.                                       |\n");
         printf("| [0] para sair.                                                     |\n");
-        printf("|                                                                    |\n======================================================================\n");
+        printf("|                                                                    |\n"RED BOLD"======================================================================\n");
+        printf(RESET);
 
         printf("Digite o que deseja fazer: ");
-        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 5){
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 6){
             limpar_buffer();
-            printf("ERRO! DIGITE NOVAMENTE.\n");
+            printf(RED "ERRO! DIGITE NOVAMENTE.\n");
+            printf(RESET);
             printf("Digite o que deseja fazer: ");
         }
 
@@ -63,20 +67,24 @@ int main(){
                 limpar_tela();
                 break;
             case 2:
-                menu_corrida(central, &historico, &oficina, lista, estoque, &campeonato);
+                menu_corrida(central, &historico, &oficina, lista, estoque, &campeonato, &total, &temp);
                 limpar_tela();
                 break;
             case 3:
-                menu_oficina(&oficina);
+                menu_oficina(&oficina, lista);
                 limpar_tela();
                 break;
             case 4:
-                menu_camp(campeonato, &contador, lista, central);
+                menu_camp(campeonato, lista, central, total);
                 limpar_tela();
                 break;
             case 5:
                 
-                menu_historico(historico, temp, lista);
+                menu_historico(historico, temp, lista, total);
+                limpar_tela();
+                break;
+            case 6:
+                menu_item(estoque, central);
                 limpar_tela();
                 break;
             case 0:
@@ -86,6 +94,9 @@ int main(){
 
     free(estoque);
     free(central);
-    
+    free(lista);
+    free(removidos);
+    free(campeonato);
+    free(historico);
     return 0;
 }

@@ -13,17 +13,14 @@
 //funcao para inicializar as pistas no começo do codigo, assim que iniciar o programa
 Corrida *cria_pistas(){
     Corrida *pistas = (Corrida*) malloc(5 * sizeof(Corrida));
-    
+    if(pistas == NULL){
+        printf("ERRO DE ALOCAÇÃO!\n");
+        return NULL;
+    }
     for(int i = 0; i < 5; i++){
         for(int j = 0; j < 7; j++){
             pistas[i].itens[j] = 0;
         }
-    }
-
-
-    if(pistas == NULL){
-        printf("ERRO DE ALOCAÇÃO!\n");
-        return NULL;
     }
 
     strcpy(pistas[0].nome, "Rainbow Road");
@@ -60,9 +57,12 @@ void lista_pistas(HeapCorridas *heap){
         return;
     }
 
-    printf("\n------------------------------------------\n\n|\tPISTAS RESTANTES NA CENTRAL CORRIDAS\t|\n\n------------------------------------------\n");
+    printf("\n--------------------------------------------------\n");
+    printf("|                                                  |\n");
+    printf("|\tPISTAS RESTANTES NA CENTRAL CORRIDAS\t|");
+    printf("\n--------------------------------------------------\n");
     for(int i = 0; i < heap->tamanho; i++){
-        printf("[%d] %s\nPerigo: %d\nVoltas: %d\n", i+1, heap->corridas[i].nome, heap->corridas[i].perigo, heap->corridas[i].voltas);   
+        printf("\n[%d] "YELLOW BOLD"%s\n\n"RESET"Perigo: "RED"%d\n"RESET"Voltas: %d\n", i+1, heap->corridas[i].nome, heap->corridas[i].perigo, heap->corridas[i].voltas);   
     }
 }
 //inicia as prioridade das corridas
@@ -137,12 +137,12 @@ Corrida remover_corrida(HeapCorridas *heap){
 void exibir_corrida(Corrida corrida){
     char *climas[4] = {"", "Ensolarado", "Chuvoso", "Nevando"};
 
-    printf("\n========================= CORRIDA PREPARADA =========================\n");
-    printf("Pista: %s\n", corrida.nome);
+    printf(GREEN BOLD "\n========================= CORRIDA PREPARADA =========================\n" RESET);
+    printf("Pista: "CYAN BOLD"%s\n"RESET, corrida.nome);
     printf("Numero de Voltas: %d\n", corrida.voltas);
-    printf("Nivel de Perigo: %d\n", corrida.perigo);
+    printf("Nivel de Perigo: "RED BOLD"%d\n"RESET, corrida.perigo);
     if(corrida.clima >= 1 && corrida.clima <= 3){
         printf("Condicao Climatica: %s\n", climas[corrida.clima]);
     }
-    printf("=======================================================================\n");
+
 }

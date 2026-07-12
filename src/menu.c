@@ -12,42 +12,49 @@
 #include "camp.h"
 #include "menu.h"
 #include "simulacao.h"
-void menu_camp(Camp *campeonato, int *contador, NoPiloto *lista, HeapCorridas *central){
-    int opcao, last = -1;
+void menu_camp(Camp *campeonato, NoPiloto *lista, HeapCorridas *central, Camp *total){
+    int opcao, last = -1, contador;
     char name[50];
     limpar_tela();
     do {
-        printf("\n=========================== CAMPEONATO ===============================\n");
+        printf(BLUE "\n=========================== CAMPEONATO ===============================\n");
+        printf(RESET);
+        printf("|                                                                    |\n");
         printf("| [1] para imprimir o rank total.                                    |\n");
-        printf("| [2] para imprimir o rank atual.                                    |\n");
+        printf("| [2] para imprimir o top 10.                                        |\n");
         printf("| [3] para imprimir o atual campeão.                                 |\n");
         printf("| [4] para consultar a pontuação de um jogador.                      |\n");
         printf("| [0] para sair.                                                     |\n");
-        printf("|                                                                    |\n======================================================================\n");
-
+        printf("|                                                                    |\n" BLUE "======================================================================\n");
+        printf(RESET);
         printf("Digite o que deseja fazer: ");
         while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 4){
             getchar();
-            printf("ERRO! DIGITE NOVAMENTE.\n");
+            printf(RED "ERRO! DIGITE NOVAMENTE.\n");
+            printf(RESET);
         }
 
         switch(opcao){
             case 1:
+                contador = 0;
                 limpar_buffer();
-                ranking(campeonato, contador);
-                printf("Aperte ENTER para voltar...");
+                ranking(campeonato, &contador);
+                printf(GREEN "Aperte ENTER para voltar...");
+                printf(RESET);
                 getchar();
                 limpar_tela();
                 break;
             case 2:
+                contador = 0;
                 limpar_buffer();
-                rank_tot(campeonato, contador, &last);
-                printf("Aperte ENTER para voltar...");
+                rank_tot(campeonato, &contador, &last);
+                printf(GREEN "Aperte ENTER para voltar...");
+                printf(RESET);
                 getchar();
                 limpar_tela();
                 break;
             case 3:
-                champion(campeonato, central);
+                champion(total, central);
                 esperar(5000);
                 limpar_tela();
                 break;
@@ -70,7 +77,9 @@ void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
     int opcao;
     char name[50];
     do{
-        printf("\n=========================== Pilotos ==================================\n");
+        printf(BLUE "\n=========================== Pilotos ==================================\n");
+        printf(RESET);
+        printf("|                                                                    |\n");
         printf("| [1] Cadastrar piloto.                                              |\n");
         printf("| [2] Remover piloto.                                                |\n");
         printf("| [3] Listar pilotos.                                                |\n");
@@ -79,11 +88,13 @@ void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
         printf("| [6] Listar pilotos suspensos.                                      |\n");
         printf("| [7] Listar piloto com mais trofeus.                                |\n");
         printf("| [0] para voltar.                                                   |\n");
-        printf("|                                                                    |\n======================================================================\n");
+        printf("|                                                                    |\n" BLUE "======================================================================\n");
+        printf(RESET);
         printf("Digite o que deseja fazer: ");
         while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 7){
             getchar();
-            printf("ERRO! DIGITE NOVAMENTE.\n");
+            printf(RED "ERRO! DIGITE NOVAMENTE.\n");
+            printf(RESET);
         }
         switch(opcao){
             case 1:
@@ -98,7 +109,8 @@ void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
             case 3:
                 limpar_buffer();
                 listar_pilotos_all(*lista);
-                printf("Aperte ENTER para voltar...");
+                printf(GREEN "\nAperte ENTER para voltar...");
+                printf(RESET);
                 getchar();
                 limpar_tela();
                 break;
@@ -120,7 +132,8 @@ void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
             case 6:
                 limpar_buffer();
                 listar_suspensos(*removidos);
-                printf("Aperte ENTER para retornar...");
+                printf(GREEN "\nAperte ENTER para retornar...");
+                printf(RESET);
                 getchar();
                 limpar_tela();
                 break;
@@ -136,38 +149,46 @@ void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
 }
 
 
-void menu_historico(Historico *historico, int temp, NoPiloto *lista){
+void menu_historico(Historico *historico, int temp, NoPiloto *lista, Camp *total){
     int opcao;
+    int contador;
     limpar_tela();
     do {
-        printf("\n=========================== HISTÓRICO ================================\n");
+        printf(BLUE "\n=========================== HISTÓRICO ================================\n");
+        printf(RESET);
         printf("|                                                                    |\n");
         printf("| [1] para listar os vencedores.                                     |\n");
         printf("| [2] para listar uma temporada especifica.                          |\n");
         printf("| [3] para consultar os itens mais usados.                           |\n");
         printf("| [4] para exibir a maior rivalidade(mais corridas disputadas contra)|\n");
         printf("| [5] para exibir a maior participação.                              |\n");
+        printf("| [6] para consultar o ranking geral.                                |\n");
         printf("| [0] para sair.                                                     |\n");
-        printf("|                                                                    |\n======================================================================\n");
+        printf("|                                                                    |\n" BLUE "======================================================================\n");
+        printf(RESET);
 
         printf("Digite o que deseja fazer: ");
-        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 5){
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 6){
             getchar();
-            printf("ERRO! DIGITE NOVAMENTE.\n");
+            printf(RED "ERRO! DIGITE NOVAMENTE.\n");
+            printf(RESET);
         }
 
         switch(opcao){
             case 1:
                 limpar_buffer();
                 listar_vencedores(historico);
-                printf("Aperte ENTER para retornar...");
+                printf(GREEN "\nAperte ENTER para retornar...");
+                printf(RESET);
                 getchar();
                 limpar_tela();
                 break;
             case 2:
                 limpar_buffer();
                 consulta_temp(historico, temp);
-                printf("Aperte ENTER para retornar...");
+                limpar_buffer();
+                printf(GREEN "\nAperte ENTER para retornar...");
+                printf(RESET);
                 getchar();
                 limpar_tela();
                 break;
@@ -187,6 +208,15 @@ void menu_historico(Historico *historico, int temp, NoPiloto *lista){
                 esperar(5000);
                 limpar_tela();
                 break;
+            case 6:
+                contador = 0;
+                limpar_buffer();
+                ranking(total, &contador);
+                printf(GREEN "Aperte ENTER para voltar...");
+                printf(RESET);
+                getchar();
+                limpar_tela();
+                break;
             case 0:
                 break;
         }
@@ -195,38 +225,40 @@ void menu_historico(Historico *historico, int temp, NoPiloto *lista){
 }
 
 
-
-
-
-
-
-
-void menu_corrida(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato){
+void menu_corrida(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato, Camp **total, int *temp){
     int opcao;
 
     do{
-        printf("\n========================== Corridas ==================================\n");
+        printf(BLUE "\n========================== Corridas ==================================\n");
+        printf(RESET);
+        printf("|                                                                    |\n");
         printf("| [1] Visualizar pistas restantes na Central.                        |\n");
         printf("| [2] Preparar proxima corrida (remove a de maior prioridade).       |\n");
+        printf("| [3] para encerrar a temporada.                                     |\n");
         printf("| [0] para voltar.                                                   |\n");
-        printf("|                                                                    |\n======================================================================\n");
+        printf("|                                                                    |\n" BLUE"======================================================================\n");
+        printf(RESET);
         printf("Digite o que deseja fazer: ");
-        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 2){
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 3){
             limpar_buffer();
-            printf("ERRO! DIGITE NOVAMENTE.\n");
+            printf(RED"ERRO! DIGITE NOVAMENTE.\n"RESET);
             printf("Digite o que deseja fazer: ");
         }
 
         switch(opcao){
             case 1:
                 lista_pistas(central);
-                printf("\nAperte ENTER para retornar...");
+                printf(GREEN"\nAperte ENTER para retornar...");
+                printf(RESET);
                 limpar_buffer();
                 getchar();
                 limpar_tela();
                 break;
             case 2:
-                simulacao_final(central, historico, oficina, lista, estoque, campeonato);
+                simulacao_final(central, historico, oficina, lista, estoque, campeonato, total, *temp);
+                break;
+            case 3:
+                end_temp(campeonato, central, temp);
                 break;
             case 0:
                 break;
@@ -234,40 +266,56 @@ void menu_corrida(HeapCorridas *central, Historico **historico, Oficina *oficina
     }while(opcao != 0);
 }
 
-void menu_oficina(Oficina *oficina){
+void menu_oficina(Oficina *oficina, NoPiloto *lista){
     int opcao;
-    Kart reparado;
     limpar_tela();
     do {
-        printf("\n========================== OFICINA ================================\n");
+        printf(BLUE "\n========================== OFICINA ================================\n");
+        printf(RESET);
+        printf("|                                                                    |\n");
         printf("| [1] para ver a oficina.                                            |\n");
         printf("| [2] para reparar destruidos.                                       |\n");
         printf("| [3] para reparar danificados.                                      |\n");
-        printf("|                                                                    |\n======================================================================\n");
-
+        printf("| [0] para voltar.                                                   |\n");
+        printf("|                                                                    |\n" BLUE "======================================================================\n");
+        printf(RESET);
         printf("Digite o que deseja fazer: ");
         while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 3){
             getchar();
-            printf("ERRO! DIGITE NOVAMENTE.\n");
+            printf(RED "ERRO! DIGITE NOVAMENTE.\n");
+            printf(RESET);
         }
 
         switch(opcao){
             case 1:
                 limpar_buffer();
                 consulta_oficina(oficina);
-                printf("Aperte ENTER para retornar...");
+                printf(GREEN "\nAperte ENTER para retornar...");
+                printf(RESET);
                 getchar();
                 limpar_tela();
                 break;
             case 2:
-                reparado = repair_destructed(&oficina->destruct);
-                printf("Kart %s reparado com sucesso.\n", reparado.nome);
-                esperar(5000);
-                limpar_tela();
+                if(oficina->destruct.tam != 0){
+                   
+                    repair_destructed(&oficina->destruct, lista);
+                    
+                    
+                   
+                }else {
+                    printf(RED "NENHUM KART NA OFICINA.\n" RESET);
+                }
+                esperar(5000);  
+                limpar_tela();   
                 break;
             case 3:
-                reparado = repair_damaged(&oficina->damaged);
-                printf("Kart %s reparado com sucesso.\n", reparado.nome);
+            if(oficina->damaged.tam != 0){
+                
+                repair_damaged(&oficina->damaged, lista);
+                
+            }else{
+                    printf(RED"NENHUM KART NA OFICINA.\n"RESET);
+                }
                 esperar(5000);
                 limpar_tela();
                 break;
@@ -275,4 +323,45 @@ void menu_oficina(Oficina *oficina){
                 break;
         }
     } while(opcao != 0);
+}
+void menu_item(Itens *itens, HeapCorridas *heap){
+    int opcao;
+    limpar_tela();
+    do {
+        printf(BLUE"\n========================= ITENS ==============================\n"RESET);
+        printf("|                                                                    |\n");
+        printf("| [1] para listar os itens.                                          |\n");
+        printf("| [2] para adicionar item ao estoque                                 |\n");
+        printf("| [3] para ver os itens que estão sendo usados.                      |\n");
+        printf("| [0] para sair.                                                     |\n");
+        printf("|                                                                    |\n"BLUE"======================================================================"RESET"\n");
+
+        printf("Digite o que deseja fazer: ");
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 3){
+            getchar();
+            printf(RED"ERRO! DIGITE NOVAMENTE.\n"RESET);
+        }
+
+        switch(opcao){
+            case 1:
+                limpar_buffer();
+                visualizar_itens(itens);
+                printf(GREEN"Aperte ENTER para retornar..."RESET);
+                getchar();
+                limpar_tela();
+                break;
+            case 2:
+                itens = add_item(itens);
+                limpar_tela();
+                break;
+            case 3:
+                itens_uso(heap);
+                esperar(5000);
+                limpar_tela();
+                break;
+            case 0:
+                break;
+        }
+    } while(opcao != 0);
+
 }

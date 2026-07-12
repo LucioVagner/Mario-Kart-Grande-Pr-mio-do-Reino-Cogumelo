@@ -14,7 +14,7 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
     NoPiloto *aux = (NoPiloto*) malloc(sizeof(NoPiloto));
 
     if(aux == NULL){
-        printf("ERRO DE ALOCAÇÃO!");
+        printf(RED"ERRO DE ALOCAÇÃO!"RESET);
         return aux;
     }
     aux->proximo = NULL;
@@ -25,12 +25,12 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
     fgets(aux->piloto.nome, sizeof(aux->piloto.nome), stdin);
     aux->piloto.nome[strcspn(aux->piloto.nome, "\n")] = 0;
 
-
+    printf("\n\n------------------------------------------\n");
     printf("Selecione a categoria do piloto.\n");
-    printf("[1] para leve.\n[2] para medio.\n[3] para pesado.\n");
+    printf(BLUE BOLD"[1] para leve.\n[2] para medio.\n[3] para pesado.\n"RESET);
     while (scanf("%d", &aux->piloto.categoria) != 1 || aux->piloto.categoria < 1 || aux->piloto.categoria >3){
         while (getchar() != '\n');
-        printf("ERRO! DIGITE UMA ENTRADA VALIDA\n");
+        printf(RED"ERRO! DIGITE UMA ENTRADA VALIDA\n"RESET);
 
     }
     aux->piloto.trofeus = 0;
@@ -39,7 +39,8 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
     aux->piloto.kart = select_kart(); //vai selecionar o tipo de kart do piloto e depois pedir o nome
     
     getchar();
-    printf("Digite o nome do seu kart: ");
+    printf("\n------------------------------------------");
+    printf("\nDigite o nome do seu kart: ");
     fgets(aux->piloto.kart.nome, sizeof(aux->piloto.kart.nome), stdin);
     aux->piloto.kart.nome[strcspn(aux->piloto.kart.nome, "\n")] = 0;
 
@@ -61,37 +62,37 @@ void listar_pilotos(NoPiloto *lista){
     NoPiloto *aux = lista; //vai receber o valor atual da lista quando a função for chamada e imprimir, não precisa do aux, talvez retirar se for o caso
 
     if (aux == NULL){
-        printf("ERRO! LISTA VAZIA.\n");
+        printf(RED"ERRO! LISTA VAZIA.\n"RESET);
         return;
     }
 
 
-        printf("Nome do piloto: %s\n", aux->piloto.nome);
+        printf("\nNome do piloto: "YELLOW"%s\n"RESET, aux->piloto.nome);
         printf("Categoria do piloto: ");
         switch(aux->piloto.categoria){
             case 1:
-                printf("Leve.\n");
+                printf(GREEN BOLD"Leve.\n"RESET);
                 break;
             case 2:
-                printf("Medio.\n");
+                printf(YELLOW BOLD"Medio.\n"RESET);
                 break;
             case 3:
-                printf("Pesado.\n");
+                printf(RED BOLD"Pesado.\n"RESET);
                 break;
         }
-        printf("Quantidade de trofeus: %d\n", aux->piloto.trofeus);
+        printf("Quantidade de trofeus: "MAGENTA BOLD "%d\n\n"RESET, aux->piloto.trofeus);
         exibir_kart(aux->piloto.kart);
 
-        printf("STATUS DO PILOTO: ");
+        printf("\nSTATUS DO PILOTO: ");
             switch(aux->piloto.status){
                 case 0:
-                    printf("DISPONIVEL.\n");
+                    printf(GREEN"DISPONIVEL.\n"RESET);
                     break;
                 case 1:
-                    printf("SUSPENSO.\n");
+                    printf(RED"SUSPENSO.\n"RESET);
                     break;
                 case 2:
-                    printf("ACIDENTADO.\n");
+                    printf(YELLOW "ACIDENTADO.\n"RESET);
                     break;
             }
         }
@@ -99,39 +100,39 @@ void listar_pilotos_all(NoPiloto *lista){
     NoPiloto *aux = lista; //vai receber o valor atual da lista quando a função for chamada e imprimir, não precisa do aux, talvez retirar se for o caso
 
     if (aux == NULL){
-        printf("ERRO! LISTA VAZIA.\n");
+        printf(RED"ERRO! LISTA VAZIA.\n"RESET);
         return;
     }
 
     while(aux != NULL){
         printf("---------------------------------------------\n");
-        printf("Nome do piloto: %s\n", aux->piloto.nome);
+        printf("Nome do piloto: "YELLOW BOLD"%s\n"RESET, aux->piloto.nome);
         printf("Categoria do piloto: ");
         switch(aux->piloto.categoria){
             case 1:
-                printf("Leve.\n");
+                printf(GREEN BOLD"Leve.\n"RESET);
                 break;
             case 2:
-                printf("Medio.\n");
+                printf(YELLOW BOLD"Medio.\n"RESET);
                 break;
             case 3:
-                printf("Pesado.\n");
+                printf(RED BOLD"Pesado.\n"RESET);
                 break;
         }
 
-        printf("Quantidade de trofeus: %d\n", aux->piloto.trofeus);
+        printf("Quantidade de trofeus: "MAGENTA BOLD"%d\n\n"RESET, aux->piloto.trofeus);
         exibir_kart(aux->piloto.kart);
 
-        printf("STATUS DO PILOTO: ");
+        printf("\nSTATUS DO PILOTO: ");
             switch(aux->piloto.status){
                 case 0:
-                    printf("DISPONIVEL.\n");
+                    printf(GREEN"DISPONIVEL.\n"RESET);
                     break;
                 case 1:
-                    printf("SUSPENSO.\n");
+                    printf(RED"SUSPENSO.\n"RESET);
                     break;
                 case 2:
-                    printf("ACIDENTADO.\n");
+                    printf(YELLOW"ACIDENTADO.\n"RESET);
                     break;
             }
         printf("---------------------------------------------\n");
@@ -144,7 +145,7 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
     int num;
     char nome[50];
     if (aux == NULL){
-        printf("ERRO!! LISTA VAZIA.\n");
+        printf(RED"ERRO! LISTA VAZIA.\n"RESET);
         return lista;
     }
     NoPiloto *fimremovidos = *removidos; //lista dos removidos da lista(suspensos)
@@ -154,10 +155,10 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
         }
     }
     
-    printf("[1] Remover piloto ACIDENTADO.\t[2] EXCLUIR piloto da sua escolha.\n");
+    printf("[1] Remover piloto "BOLD YELLOW"ACIDENTADO"RESET".\t[2] "RED"EXCLUIR"RESET" piloto da sua escolha.\n");
     while(scanf("%d", &num) != 1 || num < 1 || num > 2){
         limpar_buffer();
-        printf("ERRO! DIGITE UMA ENTRADA VÁLIDA.\n");
+        printf(RED"ERRO! DIGITE UMA ENTRADA VÁLIDA.\n"RESET);
     }
     if(num == 1){
         while (aux != NULL){
@@ -187,7 +188,7 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
                     *removidos = remover; 
                 }
                 fimremovidos = remover;
-                printf("Piloto removido.\n");
+                printf("Piloto "RED"removido"RESET".\n");
 
             } else{
                 aux = aux->proximo;
@@ -218,7 +219,7 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
                     remover->proximo->anterior = remover->anterior;
                 }
                 free(remover);
-                printf("Piloto removido.\n");
+                printf("Piloto "RED"removido"RESET".\n");
                 return lista;
             }else{
                 aux = aux->proximo;
@@ -235,7 +236,7 @@ void listar_piloto_nome(NoPiloto* lista, char name[50]){
     NoPiloto *aux = lista;
 
     if (aux == NULL){
-        printf("ERRO! LISTA VAZIA.\n");
+        printf(RED"ERRO! LISTA VAZIA.\n"RESET);
         return;
     }
 
@@ -257,7 +258,7 @@ void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, in
     int choose;
 
     if (aux == NULL){
-        printf("ERRO! LISTA VAZIA.\n");
+        printf(RED"ERRO! LISTA VAZIA.\n"RESET);
         return;
     }
 
@@ -274,7 +275,7 @@ void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, in
                     printf("[1] para atualizar o nome.\n[2] para atualizar a categoria.\n");
                     while(scanf("%d", &choose) != 1 || choose < 1 || choose > 2){
                         getchar();
-                        printf("ERRO! DIGITE UMA ENTRADA VÁLIDA.\n");
+                        printf(RED"ERRO! DIGITE UMA ENTRADA VÁLIDA.\n"RESET);
                     }
 
                     switch (choose){
@@ -292,13 +293,13 @@ void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, in
                             printf("Digite a nova categoria do piloto: ");
                             while (scanf("%d", &newcat) != 1 || newcat < 1 || newcat >3){
                                 while (getchar() != '\n');
-                                printf("ERRO! DIGITE UMA ENTRADA VALIDA\n");
+                                printf(RED"ERRO! DIGITE UMA ENTRADA VALIDA\n"RESET);
                             }
                             aux->piloto.categoria = newcat;
                             break;
                         }
                         default: 
-                            printf("Opção Inválida.");
+                            printf(RED"Opção Inválida."RESET);
                             break;
                 }
             
@@ -318,7 +319,7 @@ void listar_suspensos (NoPiloto *removidos){
     NoPiloto* aux = removidos;
 
 
-    printf("================== PILOTOS SUSPENSOS ==================\n\n");
+    printf(RED "================== PILOTOS SUSPENSOS ==================\n\n"RESET);
     if(aux == NULL){
         printf("Não existe pilotos suspenso.\n");
         return;
@@ -334,18 +335,22 @@ void listar_suspensos (NoPiloto *removidos){
 void listar_categoria(NoPiloto *lista){
     NoPiloto *aux = lista;
     int choose;
-
-    printf("Escolha a categoria que deseja listar.\n\n[1] leve.\n[2] medio.\n[3] pesado.\n");
+    int find = 0;
+    printf("Escolha a categoria que deseja listar.\n\n[1] "GREEN BOLD"leve"RESET".\n[2] "YELLOW BOLD"medio"RESET".\n[3] "RED BOLD"pesado"RESET".\n");
     while(scanf("%d", &choose) != 1 || choose < 1 || choose > 3){
         getchar();
-        printf("ERRO! DIGITE UMA ENTRADA VÁLIDA.\n");
+        printf(RED"ERRO! DIGITE UMA ENTRADA VÁLIDA.\n"RESET);
     }
     while(aux != NULL){
         if(aux->piloto.categoria == choose){
             listar_pilotos(aux);
+            find = 1;
         }
         aux = aux->proximo;
  
+    }
+    if(find == 0){
+        printf("\nSEM PILOTOS DESSA CATEGORIA.\n");
     }
     return;
 }
@@ -355,7 +360,7 @@ void exibir_trofeu(NoPiloto *lista){
     int max;
 
     if (aux == NULL){
-        printf("ERRO! LISTA VAZIA.\n");
+        printf(RED"ERRO! LISTA VAZIA.\n"RESET);
         return;
     }
 

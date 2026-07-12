@@ -79,13 +79,16 @@ Itens *add_item(Itens *lista){
     int choose, quanti;
 
     printf("Digite o item que deseja adicionar ao estoque: ");
-    printf("[1] para Banana\t[2] para Casco Verde\t[3] para Cogumelo\n[4] para Casco Vermelho\t[5] para Bob-omb\t[6] para Raio\t[7] para Bullet Bill");
+    printf("\n[1] para Banana\t[2] para Casco Verde\t[3] para Cogumelo\n[4] para Casco Vermelho\t[5] para Bob-omb\t[6] para Raio\t[7] para Bullet \n");
     while(scanf("%d", &choose) != 1 || choose < 1 || choose > 7 ){
         getchar();
-        printf("ERRO! DIGITE UMA ENTRADA VÁLIDA.\n");
+        printf(RED"ERRO! DIGITE UMA ENTRADA VÁLIDA.\n"RESET);
     }
     printf("Digite a quantidade de itens que deseja adicionar: ");
-    scanf("%d", &quanti);
+    while(scanf("%d", &quanti) != 1 || quanti < 1){
+        printf(RED"\nERRO! Digite uma entrada válida.\n"RESET);
+
+    }
     lista[choose - 1].quanti += quanti;
 
     return lista;

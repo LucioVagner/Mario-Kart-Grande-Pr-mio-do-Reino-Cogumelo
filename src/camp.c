@@ -95,7 +95,7 @@ Camp *inserir(Camp *raiz, char nome[], int pontos){
     if (raiz == NULL){
         Camp *novo = (Camp*) malloc(sizeof(Camp));
         if(novo == NULL){
-            printf("ERRO! IMPOSSIVEL ALOCAR MEMORIA.\n");
+            printf(RED "ERRO! IMPOSSIVEL ALOCAR MEMORIA.\n" RESET);
             return NULL;
         }
         strcpy(novo->nome, nome);
@@ -123,7 +123,7 @@ void ranking(Camp *raiz, int *cont){
     ranking(raiz->dir, cont);
 
     (*cont)++;
-    printf("%dº lugar\t|Piloto: %s\t %d pontos\n", *cont, raiz->nome, raiz->pontos);
+    printf("%dº lugar\t| Piloto: " YELLOW BOLD "%s\t %d" RESET " pontos\n", *cont, raiz->nome, raiz->pontos);
 
     ranking(raiz->esq, cont);
 }
@@ -227,7 +227,7 @@ void champion(Camp *raiz, HeapCorridas *central){
         aux = aux->dir;
     }
 
-    printf("Campeão da temporada: %s\t| Pontos: %d", aux->nome, aux->pontos);
+    printf("Campeão da temporada: " YELLOW "%s\t" RESET "| Pontos: %d", aux->nome, aux->pontos);
 }
 //funcao pra imprimir o rank da temporada atual sem ela ter acabado
 void rank_tot(Camp *raiz, int *cont, int *last_pont){
@@ -238,9 +238,9 @@ void rank_tot(Camp *raiz, int *cont, int *last_pont){
     rank_tot(raiz->dir, cont, last_pont);
     (*cont)++;
     if((*last_pont) == raiz->pontos){
-        printf("%dº lugar\t|Piloto: %s\t|%d pontos(EMPATE)\n",*cont, raiz->nome, raiz->pontos);
+        printf(MAGENTA BOLD"%dº"RESET" lugar\t|Piloto: "YELLOW BOLD"%s\t|%d" RESET " pontos(EMPATE)\n",*cont, raiz->nome, raiz->pontos);
     }else{
-         printf("%dº lugar\t|Piloto: %s\t|%d pontos\n",*cont, raiz->nome, raiz->pontos);
+        printf(MAGENTA BOLD"%dº"RESET" lugar\t|Piloto: "YELLOW BOLD"%s\t|%d" RESET " pontos\n",*cont, raiz->nome, raiz->pontos);
     }
     (*last_pont) = raiz->pontos;
    
@@ -258,7 +258,7 @@ void consult_player(Camp *raiz, char nome[], NoPiloto *lista){
     while(aux != NULL){
         if(strcmp(aux->piloto.nome, pilot->nome) == 0){
             listar_pilotos(aux);
-            printf("Pontuação: %d", pilot->pontos);
+            printf("Pontuação:"BOLD CYAN" %d"RESET, pilot->pontos);
         }
         aux = aux->proximo;
     }
@@ -279,3 +279,11 @@ int calc_pos(int posicao){
     return 18 - 3 * posicao;
 }
 
+void liberar_camp(Camp *raiz){
+    if(raiz == NULL){
+        return;
+    }
+    liberar_camp(raiz->esq);
+    liberar_camp(raiz->dir);
+    free(raiz);
+}

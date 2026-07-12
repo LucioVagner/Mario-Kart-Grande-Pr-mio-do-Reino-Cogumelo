@@ -92,13 +92,16 @@ void heapdown_oficina(HeapOficina *heap, int tam){
 }
 
 //funcao de reparar o kart, apenas muda o valor do status do kart com maior prioridade, nao pode escolher qual kart arrumar
-Kart repair_destructed(HeapOficina *heap){
+void repair_destructed(HeapOficina *heap, NoPiloto *lista){
+    NoPiloto *aux = lista;
+    Kart repaired;
+    char nome[50];
     if (heap->tam == 0){
         printf("Nenhum kart na oficina.\n");
-        Kart vazio = {"", 0, 0, 0, 0, 0};
-        return vazio;
+        return;
     }
-    Kart repaired = heap->karts[0];
+    repaired = heap->karts[0];
+    strcpy(nome, heap->piloto[0]);
     heap->karts[0] =  heap->karts[heap->tam - 1];
     strcpy(heap->piloto[0], heap->piloto[heap->tam - 1]);
     heap->tam--;
@@ -108,54 +111,85 @@ Kart repair_destructed(HeapOficina *heap){
     }
 
     repaired.status = 0;
-    return repaired;
+    repaired.damage = 100;
+
+
+    while(aux != NULL){
+        if(strcmp(aux->piloto.nome, nome) == 0){
+
+            aux->piloto.status = 0;          // volta a ficar disponível
+            aux->piloto.kart = repaired;     // devolve o kart consertado
+            printf("Kart "YELLOW BOLD "reparado com" GREEN " sucesso.\n"RESET);
+            return;
+    }
+
+    aux = aux->proximo;
+    }
 
 }
 //mesma coisa que o de cima so que aquele era pra heap e esse é pra FIFO 
-Kart repair_damaged(FilaOficina *fila){
+void repair_damaged(FilaOficina *fila, NoPiloto *lista){
+    Nofila *aux;
+    NoPiloto *pilot = lista;
+    Kart repaired;
+    int find = 0;
     if(fila->inicio == NULL){
         printf("Nenhum kart na oficina.\n");
-        Kart vazio = {"", 0, 0, 0, 0, 0};
-        return vazio;
+        return;
     }
-    Nofila *aux = fila->inicio;
-    Kart repaired = aux->kart;
-    fila->inicio = aux->proximo;
+    aux = fila->inicio;
+    repaired = aux->kart;
+    
+    repaired.status = 0;
+    repaired.damage = 100;
+    while(pilot != NULL){
+        if(strcmp(pilot->piloto.nome, aux->piloto) == 0){
+            pilot->piloto.status = 0;
+            pilot->piloto.kart = repaired;
+            find = 1;
+            printf("Kart "YELLOW BOLD "reparado com" GREEN " sucesso.\n"RESET);
+        }
+        pilot = pilot->proximo;
+    }
+    if(find == 1){
+        fila->inicio = aux->proximo;
 
-    if(fila->inicio == NULL){
+        if(fila->inicio == NULL){
         fila->fim = NULL;
     }
 
-    free(aux);
-    fila->tam--;
-    repaired.status = 0;
-    return repaired;
-
+        free(aux);
+        fila->tam--;
+        return;
+    }else{
+        printf("Piloto não encontrado.\n");
+    }
+    
 
 }
 //passa por todos os karts danificados e destruidos da oficina com um for, so o basico
 
 void consulta_oficina(Oficina *oficina){
     limpar_tela();
-    printf("\n----------------DESTRUIDOS-----------------\n");
+    printf(MAGENTA"\n----------------DESTRUIDOS-----------------\n"RESET);
     if(oficina->destruct.tam == 0){
             printf("SEM KARTS DESTRUIDOS NA OFICINA.\n");
     }else{
         for(int i = 0; i < oficina->destruct.tam; i++){
         
-        printf("Piloto: %s\t|Kart: %s\n", oficina->destruct.piloto[i], oficina->destruct.karts[i].nome);
+        printf("Piloto: "YELLOW BOLD"%s"RESET"\t| Kart: "GREEN BOLD"%s"RESET"\n", oficina->destruct.piloto[i], oficina->destruct.karts[i].nome);
     }
 }
 
-    printf("\n----------------DANIFICADOS-----------------\n");
+    printf(CYAN"\n----------------DANIFICADOS-----------------\n"RESET);
     if(oficina->damaged.tam == 0){
             printf("SEM KARTS DANIFICADOS NA OFICINA.\n");
             esperar(5000);
     }else {
         Nofila *aux = oficina->damaged.inicio;
         while(aux  != NULL){
-        
-            printf("Piloto: %s\t|Kart: %s\n", aux->piloto, aux->kart.nome);
+            
+            printf("Piloto: "YELLOW BOLD"%s"RESET"\t| Kart: "GREEN BOLD"%s"RESET"\n", aux->piloto, aux->kart.nome);
             aux = aux->proximo;
         }
     }

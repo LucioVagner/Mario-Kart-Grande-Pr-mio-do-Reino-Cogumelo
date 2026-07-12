@@ -9,7 +9,7 @@
 #include "historico.h"
 #include "camp.h"
 #include "oficina.h"
-
+#include "portabilidade.h"
 //formulando o desempenho
 
 int desempenho_piloto(Piloto *piloto){
@@ -134,12 +134,14 @@ static int comparar_resultado(const void *a, const void *b){
 }
 
 void simular_corrida(Corrida *corrida, NoPiloto *participantes[], int num_participantes, Itens *estoque, ResultadoPiloto ranking[]){
+    int desempenho[num_participantes];
     if(num_participantes <= 0){ return; }
     if(num_participantes > MAX_PARTICIPANTES){ num_participantes = MAX_PARTICIPANTES; }
 
     for(int i = 0; i < num_participantes; i++){
         ranking[i].no = participantes[i];
-        ranking[i].resultado = calcular_resultado(&participantes[i]->piloto, corrida, estoque);
+        desempenho[i] = calcular_resultado(&participantes[i]->piloto, corrida, estoque);
+        ranking[i].resultado = desempenho[i];
         ranking[i].evento = EVENTO_NENHUM;
     }
 
@@ -148,25 +150,23 @@ void simular_corrida(Corrida *corrida, NoPiloto *participantes[], int num_partic
 
     qsort(ranking, num_participantes, sizeof(ResultadoPiloto), comparar_resultado);
 
-    for(int i = 0; i < num_participantes; i++){
-        ranking[i].resultado = calc_pos(i+1);
-    }
 }
 
 void exibir_ranking(Corrida *corrida, ResultadoPiloto ranking[], int num_participantes){
-    printf("\n===================== RESULTADO DA CORRIDA =====================\n");
-    printf("Pista: %s\n\n", corrida->nome);
+    printf(GREEN BOLD"\n===================== RESULTADO DA CORRIDA =====================\n"RESET);
+    printf("Pista: "CYAN BOLD"%s"RESET"\n\n", corrida->nome);
     for(int i = 0; i < num_participantes; i++){
-        printf("%dº lugar | Piloto: %-20s | Resultado: %d", i + 1, ranking[i].no->piloto.nome, ranking[i].resultado);
+        printf(MAGENTA BOLD"%dº"RESET" lugar | Piloto: "YELLOW BOLD"%s"RESET" | Resultado: %d pontos", i + 1, ranking[i].no->piloto.nome, ranking[i].resultado);
         if(ranking[i].evento != EVENTO_NENHUM){
-            printf("  [Evento: %s]", nome_evento(ranking[i].evento));
+            printf("  [Evento: "BOLD"%s"RESET"]", nome_evento(ranking[i].evento));
         }
         printf("\n");
     }
-    printf("==================================================================\n");
+    printf(GREEN BOLD"==================================================================\n"RESET);
 }
 
-void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato){
+void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato, Camp **ranktot, int temporada){
+    int diff;
     if(central->tamanho == 0){
         printf("Nenhuma pista disponivel na Central Digital.\n");
     } else {
@@ -191,42 +191,83 @@ void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *ofic
                 }
 
                 if(num_participantes < 2){
-                    printf("Pilotos disponiveis insuficientes (minimo 2). Corrida cancelada.\n");
+                    printf(RED"Pilotos disponiveis insuficientes (minimo 2). Corrida cancelada.\n"RESET);
                 } else {
-                    // fase de simulacao
+                     // fase de simulacao
                     ResultadoPiloto ranking[4];
                     simular_corrida(&atual, participantes, num_participantes, estoque, ranking);
+                    diff = ranking[0].resultado - ranking[1].resultado;
+                    if(diff >= 15){
+                        ranking[0].no->piloto.trofeus++;
+                        diff = -1;
+                        printf("\nVitória Absoluta.\n\n");
+                    }
+                    for(int i = 0; i < num_participantes; i++){
+                        ranking[i].resultado = calc_pos(i + 1);
+                    }
+                    if(diff != -1){
+                        ranking[0].resultado = ranking[0].resultado - 2;
+                    }
                     exibir_ranking(&atual, ranking, num_participantes);
                     //integracao campeonato (arvore AVL)
-                    int pontos_pos[4] = {15, 12, 10, 8};
                     for(int i = 0; i < num_participantes; i++){
                         if(search((*campeonato), ranking[i].no->piloto.nome) == NULL){
                             //att_pont() nao cadastra piloto novo (so atualiza quem ja existe),
                             //entao na primeira corrida do piloto inseri
-                            (*campeonato) = inserir((*campeonato), ranking[i].no->piloto.nome, pontos_pos[i]);
+                            (*campeonato) = inserir((*campeonato), ranking[i].no->piloto.nome, ranking[i].resultado);
                             } else {
-                                (*campeonato) = att_pont((*campeonato), ranking[i].no->piloto.nome, pontos_pos[i]);
+                                (*campeonato) = att_pont((*campeonato), ranking[i].no->piloto.nome, ranking[i].resultado);
                             }
-                        }
+                            if(search((*ranktot), ranking[i].no->piloto.nome) == NULL){
+                            (*ranktot) = inserir((*ranktot), ranking[i].no->piloto.nome, ranking[i].resultado);
 
+                            }else {
+                                (*ranktot) = att_pont((*ranktot), ranking[i].no->piloto.nome, ranking[i].resultado);
+                            }
+
+                        }
+                        
                         // integracao historico
                         Piloto posicoes_hist[4];
                         for(int i = 0; i < num_participantes; i++){
                             posicoes_hist[i] = ranking[i].no->piloto;
                         }
-                        (*historico) = registro_fim((*historico), atual, 1, posicoes_hist, num_participantes);
+                        (*historico) = registro_fim((*historico), atual, temporada, posicoes_hist, num_participantes);
 
                         // integracao oficina e danos, conforme os eventos sofridos
                         for(int i = 0; i < num_participantes; i++){
                             if(ranking[i].evento == EVENTO_BOBOMB){
+                                ranking[i].no->piloto.kart.damage = 0;
                                 ranking[i].no->piloto.kart.status = 2; //Destruido
                                 ranking[i].no->piloto.status = 1;      //Suspenso
                                 put_destroyed(&oficina->destruct, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
                             } else if(ranking[i].evento == EVENTO_BANANA){
-                                ranking[i].no->piloto.kart.status = 1; //Danificado
-                                put_kart(&oficina->damaged, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
+                                ranking[i].no->piloto.kart.damage -= 20;
+                                if(ranking[i].no->piloto.kart.damage < 20){
+                                    ranking[i].no->piloto.kart.status = 1;
+                                    ranking[i].no->piloto.status = 1;
+                                    put_kart(&oficina->damaged, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
+
+                                }
                             }
                         }
                     }
                 }
+}
+
+void end_temp(Camp **campeonato, HeapCorridas *central, int *temporada){
+    champion(*campeonato, central);
+    esperar(5000);
+
+    liberar_camp(*campeonato);
+    *campeonato = NULL;
+    
+    Corrida *pistas = cria_pistas();
+    iniciar_heap(central, pistas);
+    free(pistas);
+
+    (*temporada)++;
+    printf("\nTemporada %d iniciada!\n", *temporada);
+    esperar(3000);
+
 }

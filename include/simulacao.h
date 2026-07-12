@@ -46,6 +46,8 @@ void simular_corrida(Corrida *corrida, NoPiloto *participantes[], int num_partic
 
 void exibir_ranking(Corrida *corrida, ResultadoPiloto ranking[], int num_participantes);
 
-void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato);
+void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato, Camp **ranktot, int temporada);
+
+void end_temp(Camp **campeonato, HeapCorridas *central, int *temporada);
 
 #endif

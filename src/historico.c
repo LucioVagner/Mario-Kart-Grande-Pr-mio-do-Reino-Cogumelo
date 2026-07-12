@@ -14,18 +14,19 @@ void listar_vencedores (Historico *fila){
         printf("ERRO! HISTÓRICO VAZIO");
         return;
     }
-    printf("\n================================== TEMPORADA %d ==================================\n", aux->temp);
+    printf(CYAN BOLD"\n======================================== TEMPORADA %d =========================================\n"RESET, aux->temp);
     while (aux != NULL){
-        printf("\n----------------------------------------------------------------\n");
-        printf("Corrida: %s\n", aux->corrida.nome);
-        printf("Vencedor: %s\n", aux->posicao[0].nome);
-        for(int i = 0; i < aux->num_pilots; i++){
-            printf("Posição[%d]: %s\t", i+1, aux->posicao[i].nome);
+        printf("\n-----------------------------------------------------------------------------------------------------\n");
+        printf("Corrida: "MAGENTA BOLD"%s"RESET"\n", aux->corrida.nome);
+        printf("Vencedor: "YELLOW"%s"RESET"\n", aux->posicao[0].nome);
+        for(int i = 0; i < 3; i++){
+            printf("Posição[%d]: "YELLOW BOLD"%s"RESET"\t    ", i+1, aux->posicao[i].nome);
         }
-        printf("\n----------------------------------------------------------------\n");
-        printf("\n");
+       
         aux = aux->proximo;
     }
+    printf(CYAN BOLD"\n==============================================================================================\n"RESET);
+    printf("\n");
 }
 //ao fim da corrida chama esse codigo pra registrar todos esses valores no historico
 Historico *registro_fim(Historico *fila, Corrida corrida, int temp, Piloto posicao[], int num_pilots){
@@ -82,7 +83,7 @@ void item_usados(Historico *atual){
         }
     }
 
-    printf("Item mais utilizado: %s\nUsado: %d vezes", names[maior], cont[maior]);
+    printf("Item mais utilizado: "YELLOW BOLD"%s"RESET"\nUsado:"MAGENTA BOLD" %d"RESET" vezes", names[maior], cont[maior]);
 
 }
 //confere no historico quais pilotos se enfrentaram mais vezes durante todas as temporadas
@@ -112,13 +113,17 @@ void rivals(Historico *topo){
         }
         aux = aux->proximo;       
     }
+    if(cont_rivais == 0){
+        printf("NENHUMA RIVALIDADE REGISTRADA AINDA.\n");
+        return;
+    }
     for(int i = 0; i < cont_rivais; i++){
             if(rivais[i].encontros > rivais[maior].encontros){
                 maior = i;
             }
         }
 
-        printf("Maior rivalidade: %s vs %s\nNúmero de corridas disputadas: %d",rivais[maior].pilot1, rivais[maior].pilot2, rivais[maior].encontros);
+        printf("Maior rivalidade: "RED BOLD"%s "RESET"vs"BLUE BOLD" %s"RESET"\nNúmero de corridas disputadas: %d",rivais[maior].pilot1, rivais[maior].pilot2, rivais[maior].encontros);
 
 }
 //ve quem é o piloto que mais participou de corridas
@@ -147,7 +152,7 @@ void maior_participacao(Historico *atual, NoPiloto *lista){
         aux_lista = aux_lista->proximo;
     }
 
-    printf("O piloto com maior taxa de participações é: %s\nParticipações: %d", nome, maior);
+    printf("O piloto com maior taxa de participações é: "YELLOW"%s"RESET"\nParticipações: %d", nome, maior);
 
 }
 // lista todas as corridas com seus resultados
@@ -155,6 +160,6 @@ void listar_rank(Historico *hist){
     Historico *aux = hist;
     printf("\nCORRIDA: %s | Temp: %d\n", aux->corrida.nome, aux->temp);
     for(int i = 0; i < aux->num_pilots; i++){
-        printf("%dº lugar: %s\n", i+1, aux->posicao[i].nome);
+        printf(MAGENTA BOLD"%dº"RESET" lugar: "YELLOW BOLD"%s"RESET"\n", i+1, aux->posicao[i].nome);
     }
 }

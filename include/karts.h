@@ -8,6 +8,8 @@ typedef struct car{
     int controle;
     int durabil;
     int status;
+    int damage;
+    
 }Kart;
 
 Kart select_kart();   

@@ -46,4 +46,7 @@ void rank_tot(Camp *raiz, int *cont, int *last_pont);
 void consult_player(Camp *raiz, char nome[], NoPiloto *lista);
 
 int calc_pos(int posicao);
+
+void liberar_camp(Camp *raiz);
+
 #endif

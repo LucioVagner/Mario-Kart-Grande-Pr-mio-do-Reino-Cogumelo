@@ -1,6 +1,7 @@
 #ifndef OFICINA_H
 #define OFICINA_H
 #include "karts.h"
+#include "pilotos.h"
 
 typedef struct nofila{
     Kart kart;
@@ -34,9 +35,9 @@ void heapup_oficina(HeapOficina *heap, int tam);
 
 void heapdown_oficina(HeapOficina *heap, int tam);
 
-Kart repair_destructed(HeapOficina *heap);
+void repair_destructed(HeapOficina *heap, NoPiloto *lista);
 
-Kart repair_damaged(FilaOficina *fila);
+void repair_damaged(FilaOficina *fila, NoPiloto *lista);
 
 void consulta_oficina(Oficina *oficina);
 #endif
