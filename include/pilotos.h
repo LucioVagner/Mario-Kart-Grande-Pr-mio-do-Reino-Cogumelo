@@ -29,7 +29,7 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos);
 
 void listar_piloto_nome(NoPiloto* lista, char name[50]);
 
-void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, int new_status);
+void att_piloto(NoPiloto **lista, char name[50]);
 
 void listar_suspensos (NoPiloto *removidos);
 

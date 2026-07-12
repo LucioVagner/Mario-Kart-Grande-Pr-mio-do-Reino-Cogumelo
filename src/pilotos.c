@@ -25,7 +25,7 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
     fgets(aux->piloto.nome, sizeof(aux->piloto.nome), stdin);
     aux->piloto.nome[strcspn(aux->piloto.nome, "\n")] = 0;
 
-    printf("\n\n------------------------------------------\n");
+    printf("\n------------------------------------------\n\n");
     printf("Selecione a categoria do piloto.\n");
     printf(BLUE BOLD"[1] para leve.\n[2] para medio.\n[3] para pesado.\n"RESET);
     while (scanf("%d", &aux->piloto.categoria) != 1 || aux->piloto.categoria < 1 || aux->piloto.categoria >3){
@@ -39,7 +39,6 @@ NoPiloto* cadastrar_piloto (NoPiloto *lista){
     aux->piloto.kart = select_kart(); //vai selecionar o tipo de kart do piloto e depois pedir o nome
     
     getchar();
-    printf("\n------------------------------------------");
     printf("\nDigite o nome do seu kart: ");
     fgets(aux->piloto.kart.nome, sizeof(aux->piloto.kart.nome), stdin);
     aux->piloto.kart.nome[strcspn(aux->piloto.kart.nome, "\n")] = 0;
@@ -253,7 +252,7 @@ void listar_piloto_nome(NoPiloto* lista, char name[50]){
     return;
 }
 //funcao caso o player queira atualizar algum atributo do piloto, o new trophy e new status sao entradas que vao ser pedidas na main apos a corrida
-void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, int new_status){
+void att_piloto(NoPiloto **lista, char name[50]){
     NoPiloto *aux = *lista;
     int choose;
 
@@ -265,42 +264,35 @@ void att_piloto(NoPiloto **lista, char name[50], int willatt, int new_trophy, in
     while (aux != NULL){
 
         if(strcmp(aux->piloto.nome, name) == 0){
-
-            if(willatt == 0){
-                aux->piloto.trofeus = new_trophy;
-                aux->piloto.status = new_status;
-                return; 
-            }else if(willatt == 1){ //Se o willatt for 1 ele atualiza manualmente, se for 0 ele atualiza os status automaticamente
-                    printf("Escolha o que deseja atualizar: ");
-                    printf("[1] para atualizar o nome.\n[2] para atualizar a categoria.\n");
-                    while(scanf("%d", &choose) != 1 || choose < 1 || choose > 2){
+               
+            printf("[1] para atualizar o nome.\n[2] para atualizar a categoria.\n");
+            while(scanf("%d", &choose) != 1 || choose < 1 || choose > 2){
+            getchar();
+            printf(RED"ERRO! DIGITE UMA ENTRADA VÁLIDA.\n"RESET);
+              switch (choose){
+                    case 1:{
+                        char newname[50];
                         getchar();
-                        printf(RED"ERRO! DIGITE UMA ENTRADA VÁLIDA.\n"RESET);
+                        printf("Digite o nome novo: ");
+                        fgets(newname, sizeof(newname), stdin);
+                        newname[strcspn(newname, "\n")] = 0;
+                        strcpy(aux->piloto.nome, newname);
+                        break;
+                   }
+                    
+                   case 2:{
+                    int newcat;
+                    printf("Digite a nova categoria do piloto: ");
+                    while (scanf("%d", &newcat) != 1 || newcat < 1 || newcat >3){
+                    while (getchar() != '\n');
+                    printf(RED"ERRO! DIGITE UMA ENTRADA VALIDA\n"RESET);
                     }
-
-                    switch (choose){
-                        case 1:{
-                            char newname[50];
-                            getchar();
-                            printf("Digite o nome novo: ");
-                            fgets(newname, sizeof(newname), stdin);
-                            newname[strcspn(newname, "\n")] = 0;
-                            strcpy(aux->piloto.nome, newname);
-                            break;
-                        }
-                        case 2:{
-                            int newcat;
-                            printf("Digite a nova categoria do piloto: ");
-                            while (scanf("%d", &newcat) != 1 || newcat < 1 || newcat >3){
-                                while (getchar() != '\n');
-                                printf(RED"ERRO! DIGITE UMA ENTRADA VALIDA\n"RESET);
-                            }
-                            aux->piloto.categoria = newcat;
-                            break;
-                        }
-                        default: 
-                            printf(RED"Opção Inválida."RESET);
-                            break;
+                    aux->piloto.categoria = newcat;
+                    break;
+                   }
+                   default: 
+                      printf(RED"Opção Inválida."RESET);
+                      break;
                 }
             
 

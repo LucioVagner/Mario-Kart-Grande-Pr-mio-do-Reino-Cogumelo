@@ -17,8 +17,6 @@ Itens *inicializar_itens();
 
 Itens *add_item(Itens *lista);
 
-void item_corrida(Itens *lista, Corrida *corrida, int i);
-
 void devolver(Itens *lista, Corrida *corrida);
 
 int sorteio(Itens *lista, int posicao);

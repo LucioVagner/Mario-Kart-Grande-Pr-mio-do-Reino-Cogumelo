@@ -93,14 +93,6 @@ Itens *add_item(Itens *lista){
 
     return lista;
 }
-//joga itens pra corrida
-void item_corrida(Itens *lista, Corrida *corrida, int i){
-    if(lista[i].quanti <= 0){
-        return;
-    }
-    lista[i].quanti--;
-    corrida->itens[i]++;
-}
 //devolve caso o item n tenha sido usado
 void devolver(Itens *lista, Corrida *corrida){
     for(int i = 0; i < 7; i++){

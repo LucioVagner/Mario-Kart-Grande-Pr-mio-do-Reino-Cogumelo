@@ -76,6 +76,7 @@ void menu_camp(Camp *campeonato, NoPiloto *lista, HeapCorridas *central, Camp *t
 void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
     int opcao;
     char name[50];
+    limpar_tela();
     do{
         printf(BLUE "\n=========================== Pilotos ==================================\n");
         printf(RESET);
@@ -87,11 +88,12 @@ void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
         printf("| [5] Listar pilotos por categoria.                                  |\n");
         printf("| [6] Listar pilotos suspensos.                                      |\n");
         printf("| [7] Listar piloto com mais trofeus.                                |\n");
+        printf("| [8] para atualizar algum piloto.                                   |\n");
         printf("| [0] para voltar.                                                   |\n");
         printf("|                                                                    |\n" BLUE "======================================================================\n");
         printf(RESET);
         printf("Digite o que deseja fazer: ");
-        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 7){
+        while(scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 8){
             getchar();
             printf(RED "ERRO! DIGITE NOVAMENTE.\n");
             printf(RESET);
@@ -142,6 +144,13 @@ void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
                 esperar(5000);
                 limpar_tela();
                 break;
+            case 8:
+                printf("Digite o nome do piloto que deseja atualizar: ");
+                fgets(name, sizeof(name), stdin);
+                name[strcspn(name, "\n")] = '\0';
+                att_piloto(lista, name);
+                esperar(5000);
+                limpar_tela();
             case 0:
                 break;
         }
@@ -333,6 +342,7 @@ void menu_item(Itens *itens, HeapCorridas *heap){
         printf("| [1] para listar os itens.                                          |\n");
         printf("| [2] para adicionar item ao estoque                                 |\n");
         printf("| [3] para ver os itens que estão sendo usados.                      |\n");
+        printf("| [4] para rastrear um item especifico.                              |\n");
         printf("| [0] para sair.                                                     |\n");
         printf("|                                                                    |\n"BLUE"======================================================================"RESET"\n");
 
@@ -359,6 +369,12 @@ void menu_item(Itens *itens, HeapCorridas *heap){
                 esperar(5000);
                 limpar_tela();
                 break;
+            case 4:
+                limpar_buffer();
+                identify_item(heap, itens);
+                printf(GREEN"Aperte ENTER para retornar..."RESET);
+                getchar();
+                limpar_tela();
             case 0:
                 break;
         }

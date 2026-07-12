@@ -45,26 +45,22 @@ Kart select_kart(){
 }
 //lista os karts para a seleção 
 void listar_karts(Kart karts[], int tam){
-    printf("====================== STATUS DOS KARTS ======================\n\n");
+    printf(CYAN"====================== STATUS DOS KARTS ======================\n\n"RESET);
     for(int i = 0; i < tam; i++){
-        printf("TIPO: %s\n", karts[i].nome);
-        printf("Velocidade: %d\n", karts[i].vel);
-        printf("Aceleração: %d\n", karts[i].acel);
-        printf("Controle: %d\n", karts[i].controle);
-        printf("Durabilidade: %d\n", karts[i].durabil);
-        printf("\n========================================\n\n");
+        printf("TIPO: "YELLOW BOLD" %s" RESET "\n", karts[i].nome);
+        printf("Velocidade: "GREEN BOLD" %d"RESET"\n", karts[i].vel);
+        printf("Aceleração: "MAGENTA BOLD"%d\n"RESET, karts[i].acel);
+        printf("Controle: "CYAN BOLD"%d\n"RESET, karts[i].controle);
+        printf("Durabilidade: "RED BOLD"%d\n"RESET, karts[i].durabil);
+        printf(CYAN"\n========================================\n\n"RESET);
     }
 }
 //lista kart por piloto
 void exibir_kart(Kart kart){
-        printf("Nome: %s\n", kart.nome);
-        printf("Velocidade: %d\n", kart.vel);
-        printf("Aceleração: %d\n", kart.acel);
-        printf("Controle: %d\n", kart.controle);
-        printf("Durabilidade: %d\n", kart.durabil);
+        printf("Nome: "YELLOW BOLD"%s\n"RESET, kart.nome);
+        printf("Velocidade: "GREEN BOLD"%d\n" RESET, kart.vel);
+        printf("Aceleração: "MAGENTA BOLD"%d\n"RESET, kart.acel);
+        printf("Controle: "CYAN BOLD"%d\n"RESET, kart.controle);
+        printf("Durabilidade: "RED BOLD"%d\n"RESET, kart.durabil);
 }
-//atualiza o status do kart pos corrida
-void att_kart_status(Kart *kart, int status){
-    
-    kart->status = status;
-}
+
