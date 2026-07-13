@@ -195,3 +195,13 @@ void consulta_oficina(Oficina *oficina){
     }
 
 }
+void liberar_oficina(FilaOficina *fila){
+    Nofila *aux;
+    while(fila->inicio != NULL){
+        aux = fila->inicio;
+        fila->inicio = fila->inicio->proximo;
+        free(aux);
+    }
+    fila->fim = NULL;
+    fila->tam = 0;
+}

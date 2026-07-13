@@ -38,4 +38,6 @@ void listar_categoria(NoPiloto *lista);
 void exibir_trofeu(NoPiloto *lista);
 
 void listar_pilotos_all(NoPiloto *lista);
+
+void liberar_lista_pilotos(NoPiloto *lista);
 #endif

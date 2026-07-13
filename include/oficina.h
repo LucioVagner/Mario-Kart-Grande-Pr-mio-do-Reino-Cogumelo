@@ -40,4 +40,6 @@ void repair_destructed(HeapOficina *heap, NoPiloto *lista);
 void repair_damaged(FilaOficina *fila, NoPiloto *lista);
 
 void consulta_oficina(Oficina *oficina);
+
+void liberar_oficina(FilaOficina *fila);
 #endif

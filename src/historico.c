@@ -163,3 +163,11 @@ void listar_rank(Historico *hist){
         printf(MAGENTA BOLD"%dº"RESET" lugar: "YELLOW BOLD"%s"RESET"\n", i+1, aux->posicao[i].nome);
     }
 }
+void liberar_historico(Historico *hist){
+    Historico *aux;
+    while (hist != NULL){
+        aux = hist;
+        hist = hist->proximo;
+        free(aux);
+    }
+}

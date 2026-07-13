@@ -375,5 +375,12 @@ void exibir_trofeu(NoPiloto *lista){
         aux = aux->proximo;
     }
 }
-
+void liberar_lista_pilotos(NoPiloto *lista){
+    NoPiloto *aux;
+    while (lista != NULL){
+        aux = lista;
+        lista = lista->proximo;
+        free(aux);
+    }
+}
 
