@@ -43,13 +43,13 @@ int main(){
         printf(RED BOLD"\n================== SIMULADOR DE CORRIDAS DE KART =====================\n");
         printf(RESET);
         printf("|                                                                    |\n");
-        printf("| [1] para menu dos pilotos.                                         |\n");
-        printf("| [2] para menu das corridas.                                        |\n");
-        printf("| [3] para consultar a oficina.                                      |\n");
-        printf("| [4] para menu do campeonato.                                       |\n");
-        printf("| [5] para menu do histórico.                                        |\n");
-        printf("| [6] para conferir o estoque.                                       |\n");
-        printf("| [0] para sair.                                                     |\n");
+        printf("| [1] Menu dos pilotos.                                         |\n");
+        printf("| [2] Menu das corridas.                                        |\n");
+        printf("| [3] Consultar a oficina.                                      |\n");
+        printf("| [4] Menu do campeonato.                                       |\n");
+        printf("| [5] Menu do histórico.                                        |\n");
+        printf("| [6] Conferir o estoque.                                       |\n");
+        printf("| [0] Sair.                                                     |\n");
         printf("|                                                                    |\n"RED BOLD"======================================================================\n");
         printf(RESET);
 

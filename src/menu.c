@@ -243,7 +243,7 @@ void menu_corrida(HeapCorridas *central, Historico **historico, Oficina *oficina
         printf(RESET);
         printf("|                                                                    |\n");
         printf("| [1] Visualizar pistas restantes na Central.                        |\n");
-        printf("| [2] Preparar proxima corrida (remove a de maior prioridade).       |\n");
+        printf("| [2] Correr.       |\n");
         printf("| [3] Encerrar a temporada.                                     |\n");
         printf("| [0] voltar.                                                   |\n");
         printf("|                                                                    |\n" BLUE"======================================================================\n");
