@@ -52,15 +52,17 @@ Corrida *cria_pistas(){
 }
 //lista todas as pistas para serem simuladas
 void lista_pistas(HeapCorridas *heap){
+    limpar_tela();
     if(heap->tamanho == 0){
         printf("Nenhuma pista disponível na Central Digital.\n");
         return;
     }
 
-    printf("\n--------------------------------------------------\n");
-    printf("|                                                  |\n");
-    printf("|\tPISTAS RESTANTES NA CENTRAL CORRIDAS\t|");
-    printf("\n--------------------------------------------------\n");
+    printf("\n---------------------------------------------------\n");
+    printf("|                                                 |\n");
+    printf("| \tPISTAS RESTANTES NA CENTRAL CORRIDAS\t |");
+    printf("|                                                 |\n");
+    printf("\n---------------------------------------------------\n");
     for(int i = 0; i < heap->tamanho; i++){
         printf("\n[%d] "YELLOW BOLD"%s\n\n"RESET"Perigo: "RED"%d\n"RESET"Voltas: %d\n", i+1, heap->corridas[i].nome, heap->corridas[i].perigo, heap->corridas[i].voltas);   
     }

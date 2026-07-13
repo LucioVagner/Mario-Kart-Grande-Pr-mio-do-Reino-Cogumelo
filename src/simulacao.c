@@ -184,7 +184,7 @@ void exibir_ranking(Corrida *corrida, ResultadoPiloto ranking[], int num_partici
         }
         printf("\n");
     }
-    printf(GREEN BOLD"==================================================================\n"RESET);
+    printf(GREEN BOLD"\n==================================================================\n"RESET);
 }
 
 void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato, Camp **ranktot, int temporada){
@@ -197,8 +197,18 @@ void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *ofic
     } 
     
     Corrida atual = remover_corrida(central);
+    limpar_tela();
     exibir_corrida(atual);
+    printf("Simulando.");
+    fflush(stdout);
+    esperar(1000);
+    printf(".");
+    fflush(stdout);
+    esperar(1000);
+    printf(".\n\n");
+    esperar(2000);
 
+    
     // Agora escala dinamicamente até o limite imposto no .h (10)
     NoPiloto *participantes[MAX_PARTICIPANTES];
     int num_participantes = 0;
@@ -232,13 +242,16 @@ void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *ofic
         ranking[0].no->piloto.trofeus++;
         vitoria_absoluta = 1;
         printf("\nVitória Absoluta.\n\n");
+    }else {
+        vitoria_absoluta = 0;
+        printf("Vitória apertada.\n\n");
     }
     
     for(int i = 0; i < num_participantes; i++){
         ranking[i].resultado = calc_pos(i + 1);
     }
     
-    if(vitoria_absoluta == 1){
+    if(vitoria_absoluta != 1){
         ranking[0].resultado = ranking[0].resultado - 2;
     }
     

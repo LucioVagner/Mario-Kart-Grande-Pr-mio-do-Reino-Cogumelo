@@ -194,7 +194,7 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
             }
         }
     }else{
-        listar_pilotos(lista);
+        listar_pilotos_all(lista);
         limpar_buffer();
         printf("Digite o nome do piloto que deseja excluir: ");
         fgets(nome, sizeof(nome), stdin);
@@ -265,19 +265,19 @@ void att_piloto(NoPiloto **lista, char name[50]){
 
         if(strcmp(aux->piloto.nome, name) == 0){
                
-            printf("[1] para atualizar o nome.\n[2] para atualizar a categoria.\n");
+            printf("[1] para atualizar o tipo do kart.\n[2] para atualizar a categoria.\n");
             while(scanf("%d", &choose) != 1 || choose < 1 || choose > 2){
-            getchar();
-            printf(RED"ERRO! DIGITE UMA ENTRADA VÁLIDA.\n"RESET);
+                getchar();
+                printf(RED"ERRO! DIGITE UMA ENTRADA VÁLIDA.\n"RESET);
+            }
               switch (choose){
                     case 1:{
-                        char newname[50];
-                        getchar();
-                        printf("Digite o nome novo: ");
-                        fgets(newname, sizeof(newname), stdin);
-                        newname[strcspn(newname, "\n")] = 0;
-                        strcpy(aux->piloto.nome, newname);
-                        break;
+                        Kart kart;
+                        limpar_buffer();
+                        kart = select_kart();
+                        aux->piloto.kart = kart;
+                        printf("Kart atualizado com sucesso.\n");
+
                    }
                     
                    case 2:{
@@ -296,7 +296,6 @@ void att_piloto(NoPiloto **lista, char name[50]){
                 }
             
 
-        }
             return; 
         }else{
             aux = aux->proximo;

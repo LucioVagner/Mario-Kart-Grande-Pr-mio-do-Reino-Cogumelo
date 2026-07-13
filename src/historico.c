@@ -56,6 +56,7 @@ void consulta_temp(Historico *atual, int temp){
         if(aux->temp == temp){
             find = 1;
             listar_rank(aux);
+            fflush(stdout);
         }
 
         aux = aux->proximo;

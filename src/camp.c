@@ -123,7 +123,7 @@ void ranking(Camp *raiz, int *cont){
     ranking(raiz->dir, cont);
 
     (*cont)++;
-    printf("%dº lugar\t| Piloto: " YELLOW BOLD "%s\t %d" RESET " pontos\n", *cont, raiz->nome, raiz->pontos);
+    printf("%dº lugar\t| Piloto: " YELLOW BOLD "%s\t %d\n" RESET " pontos\n", *cont, raiz->nome, raiz->pontos);
 
     ranking(raiz->esq, cont);
 }
@@ -213,6 +213,7 @@ Camp* menor(Camp *no){
     }
     return menor(no->esq);
 }
+
 //funcao pra imprimir o campeao da temporada quando ela chegar ao fim
 void champion(Camp *raiz, HeapCorridas *central){
     Camp *aux;
@@ -227,7 +228,7 @@ void champion(Camp *raiz, HeapCorridas *central){
         aux = aux->dir;
     }
 
-    printf("Campeão da temporada: " YELLOW "%s\t" RESET "| Pontos: %d", aux->nome, aux->pontos);
+    printf("Campeão da temporada: " YELLOW "%s\t" RESET "| Pontos: %d\n", aux->nome, aux->pontos);
 }
 //funcao pra imprimir o rank da temporada atual sem ela ter acabado
 void rank_tot(Camp *raiz, int *cont, int *last_pont){
@@ -258,7 +259,7 @@ void consult_player(Camp *raiz, char nome[], NoPiloto *lista){
     while(aux != NULL){
         if(strcmp(aux->piloto.nome, pilot->nome) == 0){
             listar_pilotos(aux);
-            printf("Pontuação:"BOLD CYAN" %d"RESET, pilot->pontos);
+            printf("Pontuação:"BOLD CYAN" %d\n"RESET, pilot->pontos);
         }
         aux = aux->proximo;
     }

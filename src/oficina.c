@@ -119,7 +119,7 @@ void repair_destructed(HeapOficina *heap, NoPiloto *lista){
 
             aux->piloto.status = 0;          // volta a ficar disponível
             aux->piloto.kart = repaired;     // devolve o kart consertado
-            printf("Kart "YELLOW BOLD "reparado com" GREEN " sucesso.\n"RESET);
+            printf("Kart "YELLOW BOLD " %s" RESET"reparado com" GREEN " sucesso.\n"RESET, aux->piloto.kart.nome);
             return;
     }
 
@@ -147,7 +147,7 @@ void repair_damaged(FilaOficina *fila, NoPiloto *lista){
             pilot->piloto.status = 0;
             pilot->piloto.kart = repaired;
             find = 1;
-            printf("Kart "YELLOW BOLD "reparado com" GREEN " sucesso.\n"RESET);
+            printf("Kart "YELLOW BOLD " %s" RESET"reparado com" GREEN " sucesso.\n"RESET, pilot->piloto.kart.nome);
         }
         pilot = pilot->proximo;
     }
