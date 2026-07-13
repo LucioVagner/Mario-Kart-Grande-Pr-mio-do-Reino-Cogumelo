@@ -134,22 +134,44 @@ static int comparar_resultado(const void *a, const void *b){
 }
 
 void simular_corrida(Corrida *corrida, NoPiloto *participantes[], int num_participantes, Itens *estoque, ResultadoPiloto ranking[]){
-    int desempenho[num_participantes];
     if(num_participantes <= 0){ return; }
     if(num_participantes > MAX_PARTICIPANTES){ num_participantes = MAX_PARTICIPANTES; }
 
+    // Array temporário para guardar os eventos disparados pelos itens nesta corrida
+    TipoEvento eventos_gerados[MAX_PARTICIPANTES];
+
     for(int i = 0; i < num_participantes; i++){
         ranking[i].no = participantes[i];
-        desempenho[i] = calcular_resultado(&participantes[i]->piloto, corrida, estoque);
-        ranking[i].resultado = desempenho[i];
         ranking[i].evento = EVENTO_NENHUM;
+        eventos_gerados[i] = EVENTO_NENHUM;
+
+        int id_item = participantes[i]->piloto.item;
+
+        // 1. Identifica qual evento o item vai causar ANTES de consumi-lo na fórmula
+        if(id_item != -1) {
+            switch(id_item){
+                case 0: eventos_gerados[i] = EVENTO_BANANA; break;
+                case 2: eventos_gerados[i] = EVENTO_COGUMELO; break;
+                case 3: eventos_gerados[i] = EVENTO_CASCO_AZUL; break; // Casco vermelho engatilhado como evento pesado
+                case 4: eventos_gerados[i] = EVENTO_BOBOMB; break;
+                case 5: eventos_gerados[i] = EVENTO_RAIO; break;
+                // Itens como Casco Verde ou Bullet Bill dão apenas o boost de 'power' e não rodam eventos colaterais de dano
+            }
+        }
+
+        // 2. Calcula o resultado base (Isso soma o 'power' do item ao dono e reseta o slot para -1)
+        ranking[i].resultado = calcular_resultado(&participantes[i]->piloto, corrida, estoque);
     }
 
-    TipoEvento evento = sortear_evento();
-    aplicar_evento(evento, ranking, num_participantes);
+    // 3. Aplica o caos na pista rodando os eventos gerados
+    for(int i = 0; i < num_participantes; i++){
+        if(eventos_gerados[i] != EVENTO_NENHUM){
+            aplicar_evento(eventos_gerados[i], ranking, num_participantes);
+        }
+    }
 
+    // 4. Ordena o ranking final
     qsort(ranking, num_participantes, sizeof(ResultadoPiloto), comparar_resultado);
-
 }
 
 void exibir_ranking(Corrida *corrida, ResultadoPiloto ranking[], int num_participantes){
@@ -167,92 +189,99 @@ void exibir_ranking(Corrida *corrida, ResultadoPiloto ranking[], int num_partici
 
 void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato, Camp **ranktot, int temporada){
     int diff;
+    int vitoria_absoluta = 0; 
+
     if(central->tamanho == 0){
         printf("Nenhuma pista disponivel na Central Digital.\n");
-    } else {
-            Corrida atual = remover_corrida(central);
-            exibir_corrida(atual);
+        return; // Retorna para não processar nada com o Heap vazio
+    } 
+    
+    Corrida atual = remover_corrida(central);
+    exibir_corrida(atual);
 
-            //seleciona ate 4 pilotos disponiveis (status == 0) percorrendo a lista dupla
-            NoPiloto *participantes[4];
-            int num_participantes = 0;
-            NoPiloto *aux = lista;
-            while(aux != NULL && num_participantes < 4){
-                if(aux->piloto.status == 0){
-                    int item = sorteio(estoque, num_participantes);
-                    participantes[num_participantes] = aux;
-                    participantes[num_participantes]->piloto.item = item;
-                    if(item != -1){
-                        atual.itens[item]++;
-                    }
-                    num_participantes++;
-                    }
-                    aux = aux->proximo;
-                }
+    // Agora escala dinamicamente até o limite imposto no .h (10)
+    NoPiloto *participantes[MAX_PARTICIPANTES];
+    int num_participantes = 0;
+    NoPiloto *aux = lista;
+    
+    while(aux != NULL && num_participantes < MAX_PARTICIPANTES){
+        if(aux->piloto.status == 0){
+            int item = sorteio(estoque, num_participantes);
+            participantes[num_participantes] = aux;
+            participantes[num_participantes]->piloto.item = item;
+            
+            if(item != -1){
+                atual.itens[item]++;
+            }
+            num_participantes++;
+        }
+        aux = aux->proximo;
+    }
 
-                if(num_participantes < 2){
-                    printf(RED"Pilotos disponiveis insuficientes (minimo 2). Corrida cancelada.\n"RESET);
-                } else {
-                     // fase de simulacao
-                    ResultadoPiloto ranking[4];
-                    simular_corrida(&atual, participantes, num_participantes, estoque, ranking);
-                    diff = ranking[0].resultado - ranking[1].resultado;
-                    if(diff >= 15){
-                        ranking[0].no->piloto.trofeus++;
-                        diff = -1;
-                        printf("\nVitória Absoluta.\n\n");
-                    }
-                    for(int i = 0; i < num_participantes; i++){
-                        ranking[i].resultado = calc_pos(i + 1);
-                    }
-                    if(diff != -1){
-                        ranking[0].resultado = ranking[0].resultado - 2;
-                    }
-                    exibir_ranking(&atual, ranking, num_participantes);
-                    //integracao campeonato (arvore AVL)
-                    for(int i = 0; i < num_participantes; i++){
-                        if(search((*campeonato), ranking[i].no->piloto.nome) == NULL){
-                            //att_pont() nao cadastra piloto novo (so atualiza quem ja existe),
-                            //entao na primeira corrida do piloto inseri
-                            (*campeonato) = inserir((*campeonato), ranking[i].no->piloto.nome, ranking[i].resultado);
-                            } else {
-                                (*campeonato) = att_pont((*campeonato), ranking[i].no->piloto.nome, ranking[i].resultado);
-                            }
-                            if(search((*ranktot), ranking[i].no->piloto.nome) == NULL){
-                            (*ranktot) = inserir((*ranktot), ranking[i].no->piloto.nome, ranking[i].resultado);
+    if(num_participantes < 2){
+        printf(RED"Pilotos disponiveis insuficientes (minimo 2). Corrida cancelada.\n"RESET);
+        return; // Evita quebrar a execução se não tiver quórum
+    } 
+    
+    // Fase de simulacao
+    ResultadoPiloto ranking[MAX_PARTICIPANTES];
+    simular_corrida(&atual, participantes, num_participantes, estoque, ranking);
+    
+    diff = ranking[0].resultado - ranking[1].resultado;
+    if(diff >= 15){
+        ranking[0].no->piloto.trofeus++;
+        vitoria_absoluta = 1;
+        printf("\nVitória Absoluta.\n\n");
+    }
+    
+    for(int i = 0; i < num_participantes; i++){
+        ranking[i].resultado = calc_pos(i + 1);
+    }
+    
+    if(vitoria_absoluta == 1){
+        ranking[0].resultado = ranking[0].resultado - 2;
+    }
+    
+    exibir_ranking(&atual, ranking, num_participantes);
+    
+    // Integracao campeonato (arvore AVL)
+    for(int i = 0; i < num_participantes; i++){
+        if(search((*campeonato), ranking[i].no->piloto.nome) == NULL){
+            (*campeonato) = inserir((*campeonato), ranking[i].no->piloto.nome, ranking[i].resultado);
+        } else {
+            (*campeonato) = att_pont((*campeonato), ranking[i].no->piloto.nome, ranking[i].resultado);
+        }
+        
+        if(search((*ranktot), ranking[i].no->piloto.nome) == NULL){
+            (*ranktot) = inserir((*ranktot), ranking[i].no->piloto.nome, ranking[i].resultado);
+        } else {
+            (*ranktot) = att_pont((*ranktot), ranking[i].no->piloto.nome, ranking[i].resultado);
+        }
+    }
+            
+    // Integracao historico dinâmico
+    Piloto posicoes_hist[MAX_PARTICIPANTES];
+    for(int i = 0; i < num_participantes; i++){
+        posicoes_hist[i] = ranking[i].no->piloto;
+    }
+    (*historico) = registro_fim((*historico), atual, temporada, posicoes_hist, num_participantes);
 
-                            }else {
-                                (*ranktot) = att_pont((*ranktot), ranking[i].no->piloto.nome, ranking[i].resultado);
-                            }
-
-                        }
-                        
-                        // integracao historico
-                        Piloto posicoes_hist[4];
-                        for(int i = 0; i < num_participantes; i++){
-                            posicoes_hist[i] = ranking[i].no->piloto;
-                        }
-                        (*historico) = registro_fim((*historico), atual, temporada, posicoes_hist, num_participantes);
-
-                        // integracao oficina e danos, conforme os eventos sofridos
-                        for(int i = 0; i < num_participantes; i++){
-                            if(ranking[i].evento == EVENTO_BOBOMB){
-                                ranking[i].no->piloto.kart.damage = 0;
-                                ranking[i].no->piloto.kart.status = 2; //Destruido
-                                ranking[i].no->piloto.status = 1;      //Suspenso
-                                put_destroyed(&oficina->destruct, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
-                            } else if(ranking[i].evento == EVENTO_BANANA){
-                                ranking[i].no->piloto.kart.damage -= 20;
-                                if(ranking[i].no->piloto.kart.damage < 20){
-                                    ranking[i].no->piloto.kart.status = 1;
-                                    ranking[i].no->piloto.status = 1;
-                                    put_kart(&oficina->damaged, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
-
-                                }
-                            }
-                        }
-                    }
-                }
+    // Integracao oficina e danos
+    for(int i = 0; i < num_participantes; i++){
+        if(ranking[i].evento == EVENTO_BOBOMB){
+            ranking[i].no->piloto.kart.damage = 0;
+            ranking[i].no->piloto.kart.status = 2; // Destruido
+            ranking[i].no->piloto.status = 1;      // Suspenso
+            put_destroyed(&oficina->destruct, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
+        } else if(ranking[i].evento == EVENTO_BANANA){
+            ranking[i].no->piloto.kart.damage -= 20;
+            if(ranking[i].no->piloto.kart.damage < 20){
+                ranking[i].no->piloto.kart.status = 1;
+                ranking[i].no->piloto.status = 1;
+                put_kart(&oficina->damaged, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
+            }
+        }
+    }
 }
 
 void end_temp(Camp **campeonato, HeapCorridas *central, int *temporada){

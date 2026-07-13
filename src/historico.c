@@ -83,7 +83,7 @@ void item_usados(Historico *atual){
         }
     }
 
-    printf("Item mais utilizado: "YELLOW BOLD"%s"RESET"\nUsado:"MAGENTA BOLD" %d"RESET" vezes", names[maior], cont[maior]);
+    printf("Item mais utilizado: "YELLOW BOLD"%s"RESET"\nUsado:"MAGENTA BOLD" %d"RESET" vezes\n", names[maior], cont[maior]);
 
 }
 //confere no historico quais pilotos se enfrentaram mais vezes durante todas as temporadas
@@ -123,7 +123,7 @@ void rivals(Historico *topo){
             }
         }
 
-        printf("Maior rivalidade: "RED BOLD"%s "RESET"vs"BLUE BOLD" %s"RESET"\nNúmero de corridas disputadas: %d",rivais[maior].pilot1, rivais[maior].pilot2, rivais[maior].encontros);
+        printf("Maior rivalidade: "RED BOLD"%s "RESET"vs"BLUE BOLD" %s"RESET"\nNúmero de corridas disputadas: %d\n",rivais[maior].pilot1, rivais[maior].pilot2, rivais[maior].encontros);
 
 }
 //ve quem é o piloto que mais participou de corridas
@@ -152,7 +152,7 @@ void maior_participacao(Historico *atual, NoPiloto *lista){
         aux_lista = aux_lista->proximo;
     }
 
-    printf("O piloto com maior taxa de participações é: "YELLOW"%s"RESET"\nParticipações: %d", nome, maior);
+    printf("O piloto com maior taxa de participações é: "YELLOW"%s"RESET"\nParticipações: %d\n", nome, maior);
 
 }
 // lista todas as corridas com seus resultados

@@ -20,11 +20,11 @@ void menu_camp(Camp *campeonato, NoPiloto *lista, HeapCorridas *central, Camp *t
         printf(BLUE "\n=========================== CAMPEONATO ===============================\n");
         printf(RESET);
         printf("|                                                                    |\n");
-        printf("| [1] para imprimir o rank total.                                    |\n");
-        printf("| [2] para imprimir o top 10.                                        |\n");
-        printf("| [3] para imprimir o atual campeão.                                 |\n");
-        printf("| [4] para consultar a pontuação de um jogador.                      |\n");
-        printf("| [0] para sair.                                                     |\n");
+        printf("| [1] Imprimir o rank total.                                    |\n");
+        printf("| [2] Imprimir o top 10.                                        |\n");
+        printf("| [3] Imprimir o atual campeão.                                 |\n");
+        printf("| [4] Consultar a pontuação de um jogador.                      |\n");
+        printf("| [0] Sair.                                                     |\n");
         printf("|                                                                    |\n" BLUE "======================================================================\n");
         printf(RESET);
         printf("Digite o que deseja fazer: ");
@@ -163,16 +163,17 @@ void menu_historico(Historico *historico, int temp, NoPiloto *lista, Camp *total
     int contador;
     limpar_tela();
     do {
+        
         printf(BLUE "\n=========================== HISTÓRICO ================================\n");
         printf(RESET);
         printf("|                                                                    |\n");
-        printf("| [1] para listar os vencedores.                                     |\n");
-        printf("| [2] para listar uma temporada especifica.                          |\n");
-        printf("| [3] para consultar os itens mais usados.                           |\n");
-        printf("| [4] para exibir a maior rivalidade(mais corridas disputadas contra)|\n");
-        printf("| [5] para exibir a maior participação.                              |\n");
-        printf("| [6] para consultar o ranking geral.                                |\n");
-        printf("| [0] para sair.                                                     |\n");
+        printf("| [1] Listar os vencedores.                                     |\n");
+        printf("| [2] Listar uma temporada especifica.                          |\n");
+        printf("| [3] Consultar os itens mais usados.                           |\n");
+        printf("| [4] Exibir a maior rivalidade(mais corridas disputadas contra)|\n");
+        printf("| [5] Exibir a maior participação.                              |\n");
+        printf("| [6] Consultar o ranking geral.                                |\n");
+        printf("| [0] Sair.                                                     |\n");
         printf("|                                                                    |\n" BLUE "======================================================================\n");
         printf(RESET);
 
@@ -195,13 +196,13 @@ void menu_historico(Historico *historico, int temp, NoPiloto *lista, Camp *total
             case 2:
                 limpar_buffer();
                 consulta_temp(historico, temp);
-                limpar_buffer();
                 printf(GREEN "\nAperte ENTER para retornar...");
                 printf(RESET);
                 getchar();
                 limpar_tela();
                 break;
             case 3:
+                limpar_buffer();
                 item_usados(historico);
                 esperar(5000);
                 limpar_tela();
@@ -243,8 +244,8 @@ void menu_corrida(HeapCorridas *central, Historico **historico, Oficina *oficina
         printf("|                                                                    |\n");
         printf("| [1] Visualizar pistas restantes na Central.                        |\n");
         printf("| [2] Preparar proxima corrida (remove a de maior prioridade).       |\n");
-        printf("| [3] para encerrar a temporada.                                     |\n");
-        printf("| [0] para voltar.                                                   |\n");
+        printf("| [3] Encerrar a temporada.                                     |\n");
+        printf("| [0] voltar.                                                   |\n");
         printf("|                                                                    |\n" BLUE"======================================================================\n");
         printf(RESET);
         printf("Digite o que deseja fazer: ");
@@ -282,10 +283,10 @@ void menu_oficina(Oficina *oficina, NoPiloto *lista){
         printf(BLUE "\n========================== OFICINA ================================\n");
         printf(RESET);
         printf("|                                                                    |\n");
-        printf("| [1] para ver a oficina.                                            |\n");
-        printf("| [2] para reparar destruidos.                                       |\n");
-        printf("| [3] para reparar danificados.                                      |\n");
-        printf("| [0] para voltar.                                                   |\n");
+        printf("| [1] Ver a oficina.                                            |\n");
+        printf("| [2] Reparar destruidos.                                       |\n");
+        printf("| [3] Reparar danificados.                                      |\n");
+        printf("| [0] Voltar.                                                   |\n");
         printf("|                                                                    |\n" BLUE "======================================================================\n");
         printf(RESET);
         printf("Digite o que deseja fazer: ");
@@ -339,10 +340,10 @@ void menu_item(Itens *itens, HeapCorridas *heap){
     do {
         printf(BLUE"\n========================= ITENS ==============================\n"RESET);
         printf("|                                                                    |\n");
-        printf("| [1] para listar os itens.                                          |\n");
-        printf("| [2] para adicionar item ao estoque                                 |\n");
-        printf("| [3] para ver os itens que estão sendo usados.                      |\n");
-        printf("| [4] para rastrear um item especifico.                              |\n");
+        printf("| [1] Listar os itens.                                          |\n");
+        printf("| [2] Adicionar item ao estoque                                 |\n");
+        printf("| [3] Ver os itens que estão sendo usados.                      |\n");
+        printf("| [4] Rastrear um item especifico.                              |\n");
         printf("| [0] para sair.                                                     |\n");
         printf("|                                                                    |\n"BLUE"======================================================================"RESET"\n");
 

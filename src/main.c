@@ -68,6 +68,7 @@ int main(){
                 break;
             case 2:
                 menu_corrida(central, &historico, &oficina, lista, estoque, &campeonato, &total, &temp);
+                limpar_buffer();
                 limpar_tela();
                 break;
             case 3:
@@ -81,6 +82,7 @@ int main(){
             case 5:
                 
                 menu_historico(historico, temp, lista, total);
+                limpar_buffer();
                 limpar_tela();
                 break;
             case 6:
