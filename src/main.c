@@ -29,7 +29,7 @@ int main(){
 
     free(pistas);
 
-    NoPiloto *lista = criar_lista_pilotos();
+    NoPiloto *lista = inicializar_pilotos_padrao();
     NoPiloto *removidos = criar_lista_pilotos();
     Oficina oficina;
     oficina.damaged.inicio = NULL;

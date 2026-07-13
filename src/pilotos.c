@@ -383,4 +383,56 @@ void liberar_lista_pilotos(NoPiloto *lista){
         free(aux);
     }
 }
+// Função auxiliar interna para inserir os dados de forma direta na lista dupla
+NoPiloto* inserir_piloto_direto(NoPiloto *lista, char nome[], int categoria, char nome_kart[], int vel, int acel, int controle, int durabil) {
+    NoPiloto *aux = (NoPiloto*) malloc(sizeof(NoPiloto));
+    if (aux == NULL) {
+        return lista;
+    }
+
+    // Atributos do piloto
+    strcpy(aux->piloto.nome, nome);
+    aux->piloto.categoria = categoria;
+    aux->piloto.trofeus = 0;
+    aux->piloto.status = 0; // Disponível
+    aux->piloto.item = -1;
+
+    // Atributos do kart
+    strcpy(aux->piloto.kart.nome, nome_kart);
+    aux->piloto.kart.vel = vel;
+    aux->piloto.kart.acel = acel;
+    aux->piloto.kart.controle = controle;
+    aux->piloto.kart.durabil = durabil;
+    aux->piloto.kart.status = 0; // Operacional
+    aux->piloto.kart.damage = 100;
+
+    aux->proximo = NULL;
+    aux->anterior = NULL;
+
+    if (lista == NULL) {
+        return aux;
+    }
+
+    // Caminha até o final da lista para manter a sua lógica de inserção na cauda
+    NoPiloto *novo = lista;
+    while (novo->proximo != NULL) {
+        novo = novo->proximo;
+    }
+    novo->proximo = aux;
+    aux->anterior = novo;
+
+    return lista;
+}
+
+// Função principal que gera os três personagens iniciais
+NoPiloto* inicializar_pilotos_padrao() {
+    NoPiloto *lista = NULL;
+    
+    // Cadastro automático do Mario, Yoshi e Peach
+    lista = inserir_piloto_direto(lista, "Mario", 2, "Standard Kart", 50, 50, 50, 50);
+    lista = inserir_piloto_direto(lista, "Yoshi", 1, "Pipe Frame", 70, 40, 60, 30);
+    lista = inserir_piloto_direto(lista, "Peach", 2, "Mach 8", 90, 30, 40, 40);
+    
+    return lista;
+}
 

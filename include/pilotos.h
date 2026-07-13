@@ -40,4 +40,8 @@ void exibir_trofeu(NoPiloto *lista);
 void listar_pilotos_all(NoPiloto *lista);
 
 void liberar_lista_pilotos(NoPiloto *lista);
+
+NoPiloto* inserir_piloto_direto(NoPiloto *lista, char nome[], int categoria, char nome_kart[], int vel, int acel, int controle, int durabil);
+NoPiloto* inicializar_pilotos_padrao();
+
 #endif
