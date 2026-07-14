@@ -1,36 +1,47 @@
-# Mario Kart: Central Digital do Grande Prêmio
+<div align="center">
+  
+# Simulador de Corridas e Campeonato
 
-## Sobre o Projeto
-O Reino Cogumelo está enfrentando uma crise sem precedentes em seus campeonatos devido a interferências digitais causadas pelo Bowser. Para evitar o colapso das corridas, este projeto implementa a nova **Central Digital do Grande Prêmio**, o sistema oficial da Federação Mushroom Kart Racing (FMKR). 
+  <img src="https://img.shields.io/badge/C-151515?style=for-the-badge&logo=c&logoColor=white" alt="C"/>
+  <img src="https://img.shields.io/badge/Linux-151515?style=for-the-badge&logo=linux&logoColor=white" alt="Linux"/>
+  <img src="https://img.shields.io/badge/GCC-151515?style=for-the-badge&logo=gnu&logoColor=white" alt="GCC"/>
+  <img src="https://img.shields.io/badge/UFPel-151515?style=for-the-badge&logo=codeigniter&logoColor=white" alt="UFPel"/>
 
-O sistema foi projetado sob a premissa de execução em hardware embarcado nos karts, exigindo gerenciamento rigoroso de memória e estruturas de dados de alto desempenho. 
+</div>
 
-Este projeto é o Trabalho Final da disciplina de Algoritmos e Estruturas de Dados I.
+Projeto de um simulador de corridas completo, gerenciando karts, pilotos, pistas, itens (estilo Mario Kart) e um sistema integrado de campeonato e oficina mecânica. 
 
-## Autores
-* Lúcio Vagner Carvalho
-* Carlos Henrique Leite Bianchin
+**Instituição:** Universidade Federal de Pelotas (UFPel) - Centro de Desenvolvimento Tecnológico  
+**Curso:** Engenharia de Computação  
+**Autor:** Lúcio Vagner Carvalho Souza
 
-## Módulos do Sistema
-O ecossistema da aplicação é dividido em seis módulos integrados para resolver as falhas de organização do campeonato:
+---
 
-* **Módulo 1 - Central de Corridas:** Gerencia as corridas pendentes, ordenando-as automaticamente de acordo com o Nível de Perigo (prioridade) e ordem de cadastro.
-* **Módulo 2 - Registro Oficial de Pilotos:** Permite o cadastro, atualização e busca rápida de pilotos no banco de dados da Federação.
-* **Módulo 3 - Arsenal de Itens:** Controla rigidamente o estoque global da Federação, distribuindo itens nas corridas e removendo os que foram consumidos.
-* **Módulo 4 - Histórico do Grande Prêmio:** Armazena os resultados das corridas finalizadas para gerar estatísticas e rankings históricos do campeonato.
-* **Módulo 5 - Oficina do Professor E. Gadd:** Fila de manutenção de veículos acidentados, tratando reparos de Karts Destruídos com prioridade máxima sobre os Karts Danificados.
-* **Módulo 6 - Sistema de Campeonato:** Calcula a pontuação e processa a classificação oficial da temporada, definindo o campeão.
+## ⚙️ Estruturas de Dados Utilizadas
 
-> **Nota:** O sistema automatiza as corridas, dividindo o processo entre a Fase de Preparação do evento e a Fase de Simulação dos resultados baseada no desempenho, itens e sorte.
+O projeto faz uso intensivo de diversas estruturas de dados para gerenciar o ecossistema do jogo de forma otimizada e performática:
 
-## Estruturas de Dados Utilizadas
-Para atender aos requisitos técnicos e garantir a estabilidade do sistema, foram implementadas as seguintes estruturas de dados (selecionadas dentre as requisitadas pela especificação):
+### 1. Árvore Binária de Busca Balanceada (Árvore AVL)
+* **Onde:** `camp.h` (`struct camp`)
+* **Por que:** Utilizada para o gerenciamento do Ranking do Campeonato. A árvore AVL mantém os nós balanceados pela altura, garantindo que buscas, inserções de novos resultados e atualizações de pontuação ocorram em tempo logarítmico **O(log n)**. Isso oferece o melhor desempenho para manter o placar dinâmico e ordenado após cada corrida.
 
-* **[x] Listas Encadeadas (Simples/Duplas)** -> Usadas no Histórico do Grande Prêmio.
-* **[x] Filas** -> Usadas na Oficina do Professor E. Gadd.
-* **[x] Heaps** -> Usados na Central de Corridas para gerenciar prioridades.
-* **[x] Árvores Binárias Balanceadas** -> Usadas no Registro de Pilotos para busca otimizada.
+### 2. Fila de Prioridade (Max-Heap / Min-Heap)
+* **Onde:** `corridas.h` (`HeapCorridas`) e `oficina.h` (`HeapOficina`)
+* **Por que:** O Heap é a estrutura ideal para acessar o elemento de maior ou menor prioridade instantaneamente. Em `corridas.h`, garante que a próxima corrida a ser executada seja sempre a de maior prioridade. Na `oficina.h`, permite que karts destruídos (perda total) furem a fila padrão de manutenção, sendo consertados com base na sua urgência.
 
+### 3. Fila Simples (FIFO - First In, First Out)
+* **Onde:** `oficina.h` (`FilaOficina` e `Nofila`)
+* **Por que:** Usada para o conserto de karts com danos comuns (`damaged`). Segue a lógica justa de "quem chega primeiro, sai primeiro", permitindo inserções no fim e remoções no início em tempo constante **O(1)**.
+
+### 4. Lista Duplamente Encadeada
+* **Onde:** `pilotos.h` (`NoPiloto`) e `historico.h` (`Historico`)
+* **Por que:** Para os **Pilotos**, permite navegação bidirecional (avançar e retroceder) nos menus de visualização e remoção de participantes em tempo **O(1)** (após encontrar o nó). Para o **Histórico**, simula perfeitamente uma "linha do tempo", permitindo ao usuário passear facilmente pelas temporadas passadas ou mais recentes.
+
+### 5. Lista Simplesmente Encadeada
+* **Onde:** `itens.h` (`struct item`)
+* **Por que:** Utilizada para o catálogo e estoque de itens especiais do jogo. Como o estoque só precisa ser iterado em uma única direção para visualização, sorteios ou distribuição nas corridas, a lista simples economiza memória ao omitir o ponteiro "anterior".
+
+---
 ## Como Compilar e Executar
 O projeto adota uma arquitetura modularizada, separando o código-fonte (`src/`) das assinaturas e cabeçalhos (`include/`). A automação da compilação é garantida pelo `Makefile`.
 

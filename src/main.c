@@ -1,3 +1,20 @@
+/*
+------------------------------------------------------
+                                            | PROGRAMA: MARIO KART SIMULADOR .      |
+                                            | Universidade Federal de Pelotas (UFPel)      |
+                                            | NOMES:                                                              |
+                                            | Lúcio Vagner Carvalho Souza                        | 
+                                            | Carlos Henrique Leite Bianchin                     |
+                                            | Turma: Algoritmo e Estrutura de Dados      |
+                                            | COMPILE COM MAKE                                     |
+                                            ------------------------------------------------------
+
+*/
+
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
