@@ -86,7 +86,7 @@ void menu_pilotos(NoPiloto **lista, NoPiloto **removidos){
         printf("| [3] Listar pilotos.                                             |\n");
         printf("| [4] Consultar piloto.                                         |\n");
         printf("| [5] Listar pilotos por categoria.                            |\n");
-        printf("| [6] Listar pilotos suspensos.                                 |\n");
+        printf("| [6] Listar pilotos banidos.                                   |\n");
         printf("| [7] Listar piloto com mais trofeus.                             |\n");
         printf("| [8] para atualizar algum piloto.                                 |\n");
         printf("| [0] para voltar.                                                  |\n");
@@ -270,7 +270,7 @@ void menu_corrida(HeapCorridas *central, Historico **historico, Oficina *oficina
                 simulacao_final(central, historico, oficina, lista, estoque, campeonato, total, *temp);
                 break;
             case 3:
-                end_temp(campeonato, central, temp);
+                end_temp(campeonato, central, temp, estoque);
                 limpar_tela();
                 break;
             case 0:
@@ -341,7 +341,7 @@ void menu_item(Itens *itens, HeapCorridas *heap){
     int opcao;
     limpar_tela();
     do {
-        printf(BLUE"\n========================= ITENS ==============================\n"RESET);
+        printf(BLUE"\n============================== ITENS =================================\n"RESET);
         printf("|                                                                    |\n");
         printf("| [1] Listar os itens.                                              |\n");
         printf("| [2] Adicionar item ao estoque                                    |\n");
@@ -377,6 +377,7 @@ void menu_item(Itens *itens, HeapCorridas *heap){
                 limpar_buffer();
                 identify_item(heap, itens);
                 printf(GREEN"Aperte ENTER para retornar..."RESET);
+                limpar_buffer();
                 getchar();
                 limpar_tela();
             case 0:

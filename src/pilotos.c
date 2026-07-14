@@ -141,7 +141,7 @@ void listar_pilotos_all(NoPiloto *lista){
 //função de remoção dos pilotos
 NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
     NoPiloto* aux =  lista;
-    int num;
+    int num, find = 0;
     char nome[50];
     if (aux == NULL){
         printf(RED"ERRO! LISTA VAZIA.\n"RESET);
@@ -164,7 +164,7 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
             if(aux->piloto.status == 1){    //se tiver danificado ele cria uma variavel auxiliar extra pra aquele ponteiro especifico
                 NoPiloto *remover = aux; 
                 aux = aux->proximo; //avança o aux pra dar o free no remover
-
+                find = 1;
 
                 if(remover->anterior != NULL){
                     remover->anterior->proximo = remover->proximo; //se tiver algo antes ele desconecta
@@ -182,7 +182,7 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
                 remover->proximo = NULL;
 
                 if(fimremovidos != NULL){
-                    fimremovidos->proximo = remover; //fim removidos proximo ja era null?
+                    fimremovidos->proximo = remover; //fim removidos proximo ja era null
                 }else{
                     *removidos = remover; 
                 }
@@ -193,41 +193,50 @@ NoPiloto* remover_piloto(NoPiloto *lista, NoPiloto **removidos){
                 aux = aux->proximo;
             }
         }
-    }else{
-        listar_pilotos_all(lista);
-        limpar_buffer();
-        printf("Digite o nome do piloto que deseja excluir: ");
-        fgets(nome, sizeof(nome), stdin);
-        nome[strcspn(nome, "\n")] = '\0';
-        while(aux != NULL){
-            if(strcmp(aux->piloto.nome, nome) == 0){
-                NoPiloto *remover = aux;
-                aux = aux->proximo;
-
-                if(remover->anterior != NULL){
-                    remover->anterior->proximo = remover->proximo;
-                }else {
-                    lista = remover->proximo;
-                    if(lista != NULL){
-                        lista->anterior = NULL;
-                    }
-                }
-                
-
-                if(remover->proximo != NULL){
-                    remover->proximo->anterior = remover->anterior;
-                }
-                free(remover);
-                printf("Piloto "RED"removido"RESET".\n");
-                return lista;
-            }else{
-                aux = aux->proximo;
-            }
+        if(find == 0){
+            printf(RED"Nenhum piloto acidentado\n"RESET);
         }
-        printf("NENHUM PILOTO COM ESSE NOME ENCONTRADO.\n");
-        
+   }else{
+    listar_pilotos_all(lista);
+    limpar_buffer();
+
+    printf("Digite o nome do piloto que deseja excluir: ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = '\0';
+
+    while(aux != NULL){
+        if(strcmp(aux->piloto.nome, nome) == 0){
+            NoPiloto *remover = aux;
+
+            /* Remove da lista principal */
+            if(remover->anterior != NULL)
+                remover->anterior->proximo = remover->proximo;
+            else
+                lista = remover->proximo;
+
+            if(remover->proximo != NULL)
+                remover->proximo->anterior = remover->anterior;
+
+            /* Insere na lista de banidos */
+            remover->anterior = fimremovidos;
+            remover->proximo = NULL;
+
+            if(fimremovidos != NULL)
+                fimremovidos->proximo = remover;
+            else
+                *removidos = remover;
+
+            fimremovidos = remover;
+
+            printf("Piloto " RED "removido" RESET ".\n");
+            return lista;
+        }
+
+        aux = aux->proximo;
     }
 
+    printf("NENHUM PILOTO COM ESSE NOME ENCONTRADO.\n");
+}
     return lista;
 }
 //funcao que quer saber o nome do piloto para listar, so o basico
@@ -277,6 +286,7 @@ void att_piloto(NoPiloto **lista, char name[50]){
                         kart = select_kart();
                         aux->piloto.kart = kart;
                         printf("Kart atualizado com sucesso.\n");
+                        break;
 
                    }
                     
@@ -310,9 +320,9 @@ void listar_suspensos (NoPiloto *removidos){
     NoPiloto* aux = removidos;
 
 
-    printf(RED "================== PILOTOS SUSPENSOS ==================\n\n"RESET);
+    printf(RED "================== PILOTOS BANIDOS ==================\n\n"RESET);
     if(aux == NULL){
-        printf("Não existe pilotos suspenso.\n");
+        printf("Não existe pilotos banidos.\n");
         return;
     }
     while(aux != NULL){

@@ -60,8 +60,8 @@ void lista_pistas(HeapCorridas *heap){
 
     printf("\n---------------------------------------------------\n");
     printf("|                                                 |\n");
-    printf("| \tPISTAS RESTANTES NA CENTRAL CORRIDAS\t |");
-    printf("|                                                 |\n");
+    printf("| \tPISTAS RESTANTES NA CENTRAL CORRIDAS\t |\n");
+    printf("|                                                 |");
     printf("\n---------------------------------------------------\n");
     for(int i = 0; i < heap->tamanho; i++){
         printf("\n[%d] "YELLOW BOLD"%s\n\n"RESET"Perigo: "RED"%d\n"RESET"Voltas: %d\n", i+1, heap->corridas[i].nome, heap->corridas[i].perigo, heap->corridas[i].voltas);   

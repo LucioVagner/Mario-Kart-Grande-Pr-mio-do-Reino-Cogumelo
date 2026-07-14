@@ -17,7 +17,9 @@ typedef enum {
     EVENTO_BANANA,
     EVENTO_COGUMELO,
     EVENTO_BOBOMB,
-    EVENTO_RAIO
+    EVENTO_RAIO,
+    EVENTO_CASCO_VERDE,     
+    EVENTO_BULLET
 } TipoEvento;
 
 //resultado de um piloto em uma corrida ja simulada, junto do evento que o afetou (se algum)
@@ -48,6 +50,6 @@ void exibir_ranking(Corrida *corrida, ResultadoPiloto ranking[], int num_partici
 
 void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *oficina, NoPiloto *lista, Itens *estoque, Camp **campeonato, Camp **ranktot, int temporada);
 
-void end_temp(Camp **campeonato, HeapCorridas *central, int *temporada);
+void end_temp(Camp **campeonato, HeapCorridas *central, int *temporada, Itens *estoque);
 
 #endif

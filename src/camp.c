@@ -123,7 +123,7 @@ void ranking(Camp *raiz, int *cont){
     ranking(raiz->dir, cont);
 
     (*cont)++;
-    printf("%dº lugar\t| Piloto: " YELLOW BOLD "%s\t %d\n" RESET " pontos\n", *cont, raiz->nome, raiz->pontos);
+    printf("%dº lugar\t| Piloto: " YELLOW BOLD "%s\t %d" RESET " pontos\n", *cont, raiz->nome, raiz->pontos);
 
     ranking(raiz->esq, cont);
 }

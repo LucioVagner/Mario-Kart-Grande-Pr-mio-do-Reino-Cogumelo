@@ -28,7 +28,7 @@ int main(){
     iniciar_heap(central, pistas);
 
     free(pistas);
-
+    distribuir_itens_pistas(central, estoque);  
     NoPiloto *lista = inicializar_pilotos_padrao();
     NoPiloto *removidos = criar_lista_pilotos();
     Oficina oficina;

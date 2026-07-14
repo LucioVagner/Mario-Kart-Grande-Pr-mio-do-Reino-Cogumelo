@@ -66,23 +66,27 @@ int calcular_resultado(Piloto *piloto, Corrida *corrida, Itens *estoque){
 
 TipoEvento sortear_evento(){
     int chance = rand() % 100;
-    if(chance < 45){ return EVENTO_NENHUM; }
-    else if(chance < 57){ return EVENTO_CASCO_AZUL; }
-    else if(chance < 72){ return EVENTO_BANANA; }
-    else if(chance < 84){ return EVENTO_COGUMELO; }
-    else if(chance < 94){ return EVENTO_BOBOMB; }
-    else { return EVENTO_RAIO; }
+    if(chance < 40){ return EVENTO_NENHUM; }           
+    else if(chance < 52){ return EVENTO_CASCO_VERDE; } 
+    else if(chance < 64){ return EVENTO_BANANA; }      
+    else if(chance < 76){ return EVENTO_COGUMELO; }    
+    else if(chance < 84){ return EVENTO_CASCO_AZUL; }  
+    else if(chance < 92){ return EVENTO_BOBOMB; }      
+    else if(chance < 97){ return EVENTO_RAIO; }        
+    else { return EVENTO_BULLET; }                     
 }
 
 const char *nome_evento(TipoEvento evento){
     switch(evento){
-        case EVENTO_CASCO_AZUL: return "Casco Azul";
-        case EVENTO_BANANA: return "Banana";
-        case EVENTO_COGUMELO: return "Cogumelo";
-        case EVENTO_BOBOMB: return "Bob-omb";
-        case EVENTO_RAIO: return "Raio";
+        case EVENTO_CASCO_AZUL:     return "Casco Azul";
+        case EVENTO_BANANA:         return "Banana";
+        case EVENTO_COGUMELO:       return "Cogumelo";
+        case EVENTO_BOBOMB:         return "Bob-omb";
+        case EVENTO_RAIO:           return "Raio";
+        case EVENTO_CASCO_VERDE:    return "Casco Verde";
+        case EVENTO_BULLET:         return "Bullet Bill";
         case EVENTO_NENHUM:
-        default: return "Nenhum";
+        default:                    return "Nenhum";
     }
 }
 
@@ -121,6 +125,16 @@ void aplicar_evento(TipoEvento evento, ResultadoPiloto ranking[], int num_partic
                 ranking[i].evento = EVENTO_RAIO;
             }
             break;
+        case EVENTO_CASCO_VERDE:
+            alvo = rand() % num_participantes;
+            ranking[alvo].resultado -= 12;
+            ranking[alvo].evento = EVENTO_CASCO_VERDE;
+            break;
+        case EVENTO_BULLET:
+            alvo = rand() % num_participantes;
+            ranking[alvo].resultado += 30; // Impulso massivo de velocidade
+            ranking[alvo].evento = EVENTO_BULLET;
+            break;
         case EVENTO_NENHUM:
         default:
             break;
@@ -151,10 +165,12 @@ void simular_corrida(Corrida *corrida, NoPiloto *participantes[], int num_partic
         if(id_item != -1) {
             switch(id_item){
                 case 0: eventos_gerados[i] = EVENTO_BANANA; break;
+                case 1: eventos_gerados[i] = EVENTO_CASCO_VERDE; break;
                 case 2: eventos_gerados[i] = EVENTO_COGUMELO; break;
                 case 3: eventos_gerados[i] = EVENTO_CASCO_AZUL; break; // Casco vermelho engatilhado como evento pesado
                 case 4: eventos_gerados[i] = EVENTO_BOBOMB; break;
                 case 5: eventos_gerados[i] = EVENTO_RAIO; break;
+                case 6: eventos_gerados[i] = EVENTO_BULLET; break;
                 // Itens como Casco Verde ou Bullet Bill dão apenas o boost de 'power' e não rodam eventos colaterais de dano
             }
         }
@@ -197,6 +213,10 @@ void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *ofic
     } 
     
     Corrida atual = remover_corrida(central);
+    int itens_iniciais[7];
+    for(int i = 0; i < 7; i++){
+        itens_iniciais[i] = atual.itens[i];
+    }
     limpar_tela();
     exibir_corrida(atual);
     printf("Simulando.");
@@ -216,13 +236,10 @@ void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *ofic
     
     while(aux != NULL && num_participantes < MAX_PARTICIPANTES){
         if(aux->piloto.status == 0){
-            int item = sorteio(estoque, num_participantes);
+            int item = sorteio(estoque, &atual, num_participantes + 1);
             participantes[num_participantes] = aux;
             participantes[num_participantes]->piloto.item = item;
             
-            if(item != -1){
-                atual.itens[item]++;
-            }
             num_participantes++;
         }
         aux = aux->proximo;
@@ -230,6 +247,7 @@ void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *ofic
 
     if(num_participantes < 2){
         printf(RED"Pilotos disponiveis insuficientes (minimo 2). Corrida cancelada.\n"RESET);
+        devolver(estoque, &atual);
         return; // Evita quebrar a execução se não tiver quórum
     } 
     
@@ -245,6 +263,7 @@ void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *ofic
     }else {
         vitoria_absoluta = 0;
         printf("Vitória apertada.\n\n");
+        ranking[0].no->piloto.kart.damage -= 5;
     }
     
     for(int i = 0; i < num_participantes; i++){
@@ -254,9 +273,38 @@ void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *ofic
     if(vitoria_absoluta != 1){
         ranking[0].resultado = ranking[0].resultado - 2;
     }
+    for(int i = 1; i < num_participantes; i++){
+        ranking[i].no->piloto.kart.damage -= 10;
+    }
+
+    for(int i = 0; i < num_participantes; i++){
+        if(ranking[i].evento == EVENTO_BOBOMB){
+            ranking[i].no->piloto.kart.damage = 0;
+            ranking[i].no->piloto.kart.status = 2; // Destruido
+            ranking[i].no->piloto.status = 1;      // Suspenso
+            ranking[i].resultado = 0;
+            put_destroyed(&oficina->destruct, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
+        } else if(ranking[i].evento == EVENTO_BANANA){
+            ranking[i].no->piloto.kart.damage -= 20;
+            if(ranking[i].no->piloto.kart.damage < 20){
+
+                ranking[i].no->piloto.kart.status = 2; // Destruido
+                ranking[i].no->piloto.status = 1;      // Suspenso
+                ranking[i].resultado = 0;
+                put_destroyed(&oficina->destruct, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
+            } else {
+                
+                ranking[i].no->piloto.kart.status = 1; // Danificado
+                ranking[i].no->piloto.status = 2;      // Acidentado
+                put_kart(&oficina->damaged, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
+            }
+        }
+    }
+
+
     
     exibir_ranking(&atual, ranking, num_participantes);
-    
+    finalizar_itens_corrida(estoque, &atual, itens_iniciais);
     // Integracao campeonato (arvore AVL)
     for(int i = 0; i < num_participantes; i++){
         if(search((*campeonato), ranking[i].no->piloto.nome) == NULL){
@@ -278,26 +326,8 @@ void simulacao_final(HeapCorridas *central, Historico **historico, Oficina *ofic
         posicoes_hist[i] = ranking[i].no->piloto;
     }
     (*historico) = registro_fim((*historico), atual, temporada, posicoes_hist, num_participantes);
-
-    // Integracao oficina e danos
-    for(int i = 0; i < num_participantes; i++){
-        if(ranking[i].evento == EVENTO_BOBOMB){
-            ranking[i].no->piloto.kart.damage = 0;
-            ranking[i].no->piloto.kart.status = 2; // Destruido
-            ranking[i].no->piloto.status = 1;      // Suspenso
-            put_destroyed(&oficina->destruct, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
-        } else if(ranking[i].evento == EVENTO_BANANA){
-            ranking[i].no->piloto.kart.damage -= 20;
-            if(ranking[i].no->piloto.kart.damage < 20){
-                ranking[i].no->piloto.kart.status = 1;
-                ranking[i].no->piloto.status = 1;
-                put_kart(&oficina->damaged, ranking[i].no->piloto.kart, ranking[i].no->piloto.nome);
-            }
-        }
-    }
 }
-
-void end_temp(Camp **campeonato, HeapCorridas *central, int *temporada){
+void end_temp(Camp **campeonato, HeapCorridas *central, int *temporada, Itens *estoque){
     champion(*campeonato, central);
     esperar(5000);
 
@@ -308,8 +338,9 @@ void end_temp(Camp **campeonato, HeapCorridas *central, int *temporada){
     iniciar_heap(central, pistas);
     free(pistas);
 
+    distribuir_itens_pistas(central, estoque);   // <- reserva itens pra temporada nova
+
     (*temporada)++;
     printf("\nTemporada %d iniciada!\n", *temporada);
     esperar(3000);
-
 }

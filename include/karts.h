@@ -18,5 +18,4 @@ void listar_karts(Kart karts[], int tam);
 
 void exibir_kart(Kart kart);
 
-void att_kart_status(Kart *kart, int status);
 #endif

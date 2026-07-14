@@ -10,28 +10,28 @@
 //mostra todos os tipos de itens, so o basico
 void visualizar_itens(Itens *lista){
     if(lista == NULL){
-        printf("SEM ITEMS DISPONÍVEIS. ADICIONE ITENS PARA VISUALIZAR.\n");
+        printf(RED "SEM ITEMS DISPONÍVEIS. ADICIONE ITENS PARA VISUALIZAR.\n" RESET);
         return;
     }
-    printf("==================================== ITENS DISPONÍVEIS ====================================\n\n");
+    printf(GREEN BOLD"==================================== ITENS DISPONÍVEIS ====================================\n\n"RESET);
     for(int i = 0; i < 7; i++){
         printf("[%d] Nome do item: %s\tPoder: %d\tQuantidade: %d\t", i, lista[i].nome, lista[i].power, lista[i].quanti);
         switch (lista[i].rare){
             case 0:
-                printf("Raridade: Comum\n");
+                printf("Raridade: " MAGENTA "Comum\n" RESET);
                 break;
             case 1:
-                printf("Raridade: Raro\n");
+                printf("Raridade: " MAGENTA "Raro\n" RESET);
                 break;
             case 2:
-                printf("Raridade: Épico\n");
+                printf("Raridade: " MAGENTA "Épico\n" RESET);
                 break;
             case 3:
-                printf("Raridade: Lendário\n");
+                printf("Raridade: " MAGENTA "Lendário\n" RESET);
                 break;
         }
     }
-    printf("\n========================================================================\n");
+    printf(GREEN BOLD "\n========================================================================================\n" RESET);
 }
 //inicializa os itens no inicio do programa
 Itens *inicializar_itens(){
@@ -52,7 +52,7 @@ Itens *inicializar_itens(){
     lista[2].quanti = 3;
     lista[2].power = 30;
 
-    strcpy(lista[3].nome, "Casco Vermelho");
+    strcpy(lista[3].nome, "Casco Azul");
     lista[3].rare = 1;
     lista[3].quanti = 3;
     lista[3].power = 40;
@@ -101,7 +101,8 @@ void devolver(Itens *lista, Corrida *corrida){
     }
 }
 //sorteia o numero do item que vai ser jogado pra cada piloto
-int sorteio(Itens *lista, int posicao){
+//sorteia o numero do item que vai ser jogado pra cada piloto, consumindo da reserva da corrida
+int sorteio(Itens *catalogo, Corrida *corrida, int posicao){
     int raridade, inicio = rand() % 7;
 
     if(posicao == 1){
@@ -112,34 +113,54 @@ int sorteio(Itens *lista, int posicao){
         raridade = rand() % 4;
     }
 
-
-
     for(int i = 0; i < 7; i++){
         int j = (inicio + i) % 7;
 
-        if(lista[j].rare == raridade && lista[j].quanti > 0){ //se a raridade sorteada e o item sorteado for igual ele decrementa e manda o indice
-            lista[j].quanti--;
+        if(catalogo[j].rare == raridade && corrida->itens[j] > 0){
+            corrida->itens[j]--;   // consome da reserva DESSA corrida, não do estoque global
             return j;
         }
     }
-    
-    for(int i = 0; i < 7; i++){ //se nao tiver nada de item nos sorteados envia o primeiro item q achar
 
-        if(lista[i].quanti > 0){
-
-            lista[i].quanti--;
+    for(int i = 0; i < 7; i++){
+        if(corrida->itens[i] > 0){
+            corrida->itens[i]--;
             return i;
         }
     }
     return -1;
 }
 
+//distribui o estoque global entre as corridas pendentes no heap, uma unidade por vez, em rodízio
+void distribuir_itens_pistas(HeapCorridas *heap, Itens *estoque){
+    if(heap->tamanho == 0){
+        return;
+    }
+
+    for(int i = 0; i < 7; i++){
+        int pista = 0;
+        while(estoque[i].quanti > 0){
+            estoque[i].quanti--;
+            heap->corridas[pista].itens[i]++;
+            pista = (pista + 1) % heap->tamanho;
+        }
+    }
+}
+
+//ao fim da corrida: devolve o que sobrou na reserva e registra o que foi de fato usado
+void finalizar_itens_corrida(Itens *estoque, Corrida *corrida, int reservados_iniciais[7]){
+    for(int i = 0; i < 7; i++){
+        int usados = reservados_iniciais[i] - corrida->itens[i];
+        estoque[i].quanti += corrida->itens[i];  // devolve o não utilizado
+        corrida->itens[i] = usados;               // registra o consumo real pro histórico
+    }
+}
 //entra na central da corrida e confere qual item ta na corrida
 void itens_uso(HeapCorridas *central){
     int find = 1;
     char *nomes_itens[7] = {"Banana", "Casco Verde", "Cogumelo", "Casco Vermelho", "Bob-omb", "Raio", "Bullet Bill"};
 
-    printf("\n========================= ITENS EM USO =========================\n");
+    printf(BLUE BOLD"\n========================= ITENS EM USO =========================\n"RESET);
 
     for(int i = 0; i < central->tamanho; i++){
         int item = 1;
@@ -147,7 +168,7 @@ void itens_uso(HeapCorridas *central){
         for(int j = 0; j < 7; j++){
             if(central->corridas[i].itens[j] > 0){
                 if(item == 1){
-                    printf("Corrida: %s\n", central->corridas[i].nome);
+                    printf("\n\nCorrida: %s\n", central->corridas[i].nome);
                     item = 0;
                 }
                 printf("Item: %s\tQuantidade na corrida: %d\n", nomes_itens[j], central->corridas[i].itens[j]);
@@ -157,10 +178,10 @@ void itens_uso(HeapCorridas *central){
     }
 
     if(find == 1){
-        printf("Sem itens sendo utilizados nessa corrida.");
+        printf("Sem itens sendo utilizados nessa corrida.\n");
     }
 
-    printf("\n=====================================================================\n");
+    printf(BLUE BOLD"\n=====================================================================\n"RESET);
 
 }
 //procura onde um item especifico ta sendo usado
@@ -169,9 +190,9 @@ void identify_item(HeapCorridas *central, Itens *lista){
 
 
     visualizar_itens(lista);
-    printf("Qual item deseja rastrear?\n ");
+    printf("Digite o número do item que deseja rastrear:\n");
 
-    while(scanf("%d", &choose) != 1 || choose < 1 || choose > 7){
+    while(scanf("%d", &choose) != 1 || choose < 0 || choose > 6){
         getchar();
         printf("ERRO! Digite uma entrada válida.\n");
     }
@@ -180,16 +201,16 @@ void identify_item(HeapCorridas *central, Itens *lista){
 
     
     for(int i = 0; i < central->tamanho; i++){
-        if(central->corridas[i].itens[choose - 1] > 0){
-            printf("Item na Corrida: %s | Quantidade em uso: %d\n", central->corridas[i].nome, central->corridas[i].itens[choose - 1]);
+        if(central->corridas[i].itens[choose] > 0){
+            printf("Item na Corrida: "YELLOW BOLD"%s" RESET" | Quantidade em uso: "MAGENTA BOLD"%d"RESET"\n", central->corridas[i].nome, central->corridas[i].itens[choose]);
             find = 0;
         }
     }
 
     if(find == 1){
-        printf("O item não está sendo usado em nenhuma corrida.\n");
+        printf(RED"O item não está sendo usado em nenhuma corrida.\n" RESET);
     } 
 
-    printf("\n======================================================================\n");
+    printf(GREEN BOLD"\n======================================================================\n" RESET);
 
 }
