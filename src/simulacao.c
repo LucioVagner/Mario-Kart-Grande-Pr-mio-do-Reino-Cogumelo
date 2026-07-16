@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "simulacao.h"
@@ -28,15 +27,20 @@ int desempenho_piloto(Piloto *piloto){
     }
 
     return base + experiencia;
+
+    //pq que eu fiz isso ? porque um piloto com mais experiencia teria logicamente um desempenho melhor
 }
 
 int bonus_kart(Kart *kart){
     return (kart->vel * 2 + kart->acel + kart->controle) / 4;
+    //pq ? pq alguns karts são mais velozes.
 }
 
 int efeito_item(Piloto *piloto, Itens *estoque){
     if(piloto->item < 0 || piloto->item > 6){
         return 0;
+
+        //o efeito do item para calcularmos os efeitos
     }
     int efeito = estoque[piloto->item].power;
     piloto->item = -1;
@@ -45,6 +49,8 @@ int efeito_item(Piloto *piloto, Itens *estoque){
 
 int fator_sorte(){
     return (rand() % 21) - 10;
+
+    //toda corrida depende um pouco de sorte
 }
 
 int dificuldade_pista(Corrida *corrida){
@@ -52,6 +58,7 @@ int dificuldade_pista(Corrida *corrida){
     if(corrida->clima == 2){ dificuldade += 5; }
     else if(corrida->clima == 3){ dificuldade += 10; }
     return dificuldade;
+    //a dificuldade da pista tambem é um fator que afeta a simulação
 }
 
 int calcular_resultado(Piloto *piloto, Corrida *corrida, Itens *estoque){
@@ -60,6 +67,8 @@ int calcular_resultado(Piloto *piloto, Corrida *corrida, Itens *estoque){
          + efeito_item(piloto, estoque)
          + fator_sorte()
          - dificuldade_pista(corrida);
+
+         //calculo com as outras variaveis
 }
 
 //sorteando os eventos
@@ -73,7 +82,9 @@ TipoEvento sortear_evento(){
     else if(chance < 84){ return EVENTO_CASCO_AZUL; }  
     else if(chance < 92){ return EVENTO_BOBOMB; }      
     else if(chance < 97){ return EVENTO_RAIO; }        
-    else { return EVENTO_BULLET; }                     
+    else { return EVENTO_BULLET; }  
+    
+    //sortando os itens
 }
 
 const char *nome_evento(TipoEvento evento){
@@ -138,6 +149,7 @@ void aplicar_evento(TipoEvento evento, ResultadoPiloto ranking[], int num_partic
         case EVENTO_NENHUM:
         default:
             break;
+            //após o sorteio dos eventos a gente sorteio o alvo
     }
 }
 

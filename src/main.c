@@ -113,7 +113,7 @@ int main(){
 
     
 
-    return 0;
+    
     liberar_oficina(&oficina.damaged);
     free(estoque);
     free(central);
