@@ -1,6 +1,20 @@
+# Executáveis
 mario_kart
-obj/
+mario_kart_gp
+*.exe
+*.out
+
+# Objetos e compilação
 *.o
+obj/
+
+# Arquivos temporários e backups
 *~
 *.swp
+*.swo
 *.log
+*.zip
+
+# IDE e sistema operacional
+.vscode/
+.DS_Store

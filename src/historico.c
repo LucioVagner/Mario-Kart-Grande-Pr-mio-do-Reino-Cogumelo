@@ -99,7 +99,8 @@ void rivals(Historico *topo){
             for(int j = i + 1; j < aux->num_pilots; j++){
                 int find = 0;
                 for(int k = 0; k < cont_rivais; k++){
-                    if((strcmp(rivais[k].pilot1, aux->posicao[i].nome) == 0 && strcmp(rivais[k].pilot2, aux->posicao[j].nome) == 0 || (strcmp(rivais[k].pilot1, aux->posicao[j].nome) == 0 && strcmp(rivais[k].pilot2, aux->posicao[i].nome) == 0))){
+                    if (((strcmp(rivais[k].pilot1, aux->posicao[i].nome) == 0 && strcmp(rivais[k].pilot2, aux->posicao[j].nome) == 0) ||
+                        (strcmp(rivais[k].pilot1, aux->posicao[j].nome) == 0 && strcmp(rivais[k].pilot2, aux->posicao[i].nome) == 0))) {
                         rivais[k].encontros++;
                         find = 1;
                     }

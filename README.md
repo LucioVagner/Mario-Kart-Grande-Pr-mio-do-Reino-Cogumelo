@@ -1,56 +1,125 @@
 <div align="center">
   
-# Simulador de Corridas e Campeonato
+# 🏁 Mario Kart: Grande Prêmio do Reino Cogumelo
 
-  <img src="https://img.shields.io/badge/C-151515?style=for-the-badge&logo=c&logoColor=white" alt="C"/>
-  <img src="https://img.shields.io/badge/Linux-151515?style=for-the-badge&logo=linux&logoColor=white" alt="Linux"/>
-  <img src="https://img.shields.io/badge/GCC-151515?style=for-the-badge&logo=gnu&logoColor=white" alt="GCC"/>
-  <img src="https://img.shields.io/badge/UFPel-151515?style=for-the-badge&logo=codeigniter&logoColor=white" alt="UFPel"/>
+### *Simulador de Corridas, Campeonato e Oficina em C*
+
+[![C](https://img.shields.io/badge/C-11%20%2F%2099-00599C?style=for-the-badge&logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C_(programming_language))
+[![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://www.kernel.org/)
+[![GCC](https://img.shields.io/badge/GCC-Compiler-fff?style=for-the-badge&logo=gnu&logoColor=black)](https://gcc.gnu.org/)
+[![UFPel](https://img.shields.io/badge/UFPel-CDTec-blue?style=for-the-badge)](https://www.ufpel.edu.br/)
 
 </div>
 
-Projeto de um simulador de corridas completo, gerenciando karts, pilotos, pistas, itens (estilo Mario Kart) e um sistema integrado de campeonato e oficina mecânica. 
+---
 
-**Instituição:** Universidade Federal de Pelotas (UFPel) - Centro de Desenvolvimento Tecnológico  
-**Curso:** Engenharia de Computação  
-**Autor:** Lúcio Vagner Carvalho Souza
+## 📖 Sobre o Projeto
+
+O **Mario Kart: Grande Prêmio do Reino Cogumelo** é um simulador de corridas completo desenvolvido em **C**. O sistema gerencia karts, pilotos, pistas, itens especiais clássicos e mecânicas completas de corrida — incluindo acidentes, ultrapassagens, sistema de oficina com fila de reparo, histórico de rivalidades e classificação de campeonato em tempo real.
+
+O projeto foi desenvolvido para a disciplina de **Algoritmos e Estruturas de Dados** do curso de Engenharia de Computação da **Universidade Federal de Pelotas (UFPel)**.
+
+### 👥 Autores
+* **Lúcio Vagner Carvalho Souza**
+* **Carlos Henrique Leite Bianchin**
+
+---
+
+## 🎮 Funcionalidades do Sistema
+
+* **👥 Gestão de Pilotos:** Cadastro, visualização bidirecional e desativação/reativação de pilotos.
+* **🏎️ Oficina Mecânica:**
+  * Karts danificados entram em uma **fila sequencial (FIFO)**.
+  * Karts com perda total entram em uma **fila de prioridade (Heap)** para reparos emergenciais.
+* **📦 Itens Especiais:** Distribuição, estoque e uso de itens icônicos (Casco Verde, Casco Vermelho, Banana, Raio, Estrela, Cogumelo, etc.).
+* **🏁 Pistas e Corridas:** Agendamento de pistas ordenadas por prioridade/dificuldade.
+* **🎲 Simulação de Corrida:** Cálculo dinâmico volta a volta com ultrapassagens, eventos climáticos, uso de itens, batidas e pontuação.
+* **🏆 Campeonato Integrado:** Tabela de pontuação dinâmica e balanceada a cada rodada.
+* **📜 Histórico e Rivalidades:** Registro histórico de temporadas passadas e cálculo das maiores rivalidades entre pilotos.
+* **💻 Portabilidade:** Suporte a terminais Linux e Windows com comandos ANSI e limpeza de tela multiplataforma.
 
 ---
 
 ## ⚙️ Estruturas de Dados Utilizadas
 
-O projeto faz uso intensivo de diversas estruturas de dados para gerenciar o ecossistema do jogo de forma otimizada e performática:
+O projeto faz uso intensivo de estruturas de dados clássicas, selecionadas de acordo com as necessidades de complexidade e performance de cada módulo:
 
-### 1. Árvore Binária de Busca Balanceada (Árvore AVL)
-* **Onde:** `camp.h` (`struct camp`)
-* **Por que:** Utilizada para o gerenciamento do Ranking do Campeonato. A árvore AVL mantém os nós balanceados pela altura, garantindo que buscas, inserções de novos resultados e atualizações de pontuação ocorram em tempo logarítmico **O(log n)**. Isso oferece o melhor desempenho para manter o placar dinâmico e ordenado após cada corrida.
-
-### 2. Fila de Prioridade (Max-Heap / Min-Heap)
-* **Onde:** `corridas.h` (`HeapCorridas`) e `oficina.h` (`HeapOficina`)
-* **Por que:** O Heap é a estrutura ideal para acessar o elemento de maior ou menor prioridade instantaneamente. Em `corridas.h`, garante que a próxima corrida a ser executada seja sempre a de maior prioridade. Na `oficina.h`, permite que karts destruídos (perda total) furem a fila padrão de manutenção, sendo consertados com base na sua urgência.
-
-### 3. Fila Simples (FIFO - First In, First Out)
-* **Onde:** `oficina.h` (`FilaOficina` e `Nofila`)
-* **Por que:** Usada para o conserto de karts com danos comuns (`damaged`). Segue a lógica justa de "quem chega primeiro, sai primeiro", permitindo inserções no fim e remoções no início em tempo constante **O(1)**.
-
-### 4. Lista Duplamente Encadeada
-* **Onde:** `pilotos.h` (`NoPiloto`) e `historico.h` (`Historico`)
-* **Por que:** Para os **Pilotos**, permite navegação bidirecional (avançar e retroceder) nos menus de visualização e remoção de participantes em tempo **O(1)** (após encontrar o nó). Para o **Histórico**, simula perfeitamente uma "linha do tempo", permitindo ao usuário passear facilmente pelas temporadas passadas ou mais recentes.
-
-### 5. Lista Simplesmente Encadeada
-* **Onde:** `itens.h` (`struct item`)
-* **Por que:** Utilizada para o catálogo e estoque de itens especiais do jogo. Como o estoque só precisa ser iterado em uma única direção para visualização, sorteios ou distribuição nas corridas, a lista simples economiza memória ao omitir o ponteiro "anterior".
+| Estrutura | Localização | Complexidade | Finalidade Principal |
+| :--- | :--- | :--- | :--- |
+| **Árvore AVL (ABB Balanceada)** | `camp.h` (`struct camp`) | $O(\log n)$ | Ranking e pontuação dinâmica do campeonato, garantindo buscas e atualizações eficientes |
+| **Fila de Prioridade (Heap)** | `corridas.h` (`HeapCorridas`), `oficina.h` (`HeapOficina`) | $O(\log n)$ inserção/remoção | Ordenação prioritária das corridas e atendimento emergencial a karts com perda total |
+| **Fila FIFO** | `oficina.h` (`FilaOficina`, `Nofila`) | $O(1)$ | Conserto sequencial de karts com danos leves/médios ("primeiro que chega, primeiro atendido") |
+| **Lista Duplamente Encadeada** | `pilotos.h` (`NoPiloto`), `historico.h` (`Historico`) | $O(1)$ remoção local | Navegação bidirecional no menu de pilotos e linha do tempo de temporadas no histórico |
+| **Lista Simplesmente Encadeada** | `itens.h` (`struct item`) | $O(n)$ / $O(1)$ | Catálogo de itens e estoque com menor overhead de memória |
 
 ---
-## Como Compilar e Executar
-O projeto adota uma arquitetura modularizada, separando o código-fonte (`src/`) das assinaturas e cabeçalhos (`include/`). A automação da compilação é garantida pelo `Makefile`.
+
+## 📂 Estrutura do Repositório
+
+```text
+Mario-Kart-Grande-Pr-mio-do-Reino-Cogumelo/
+├── include/              # Cabeçalhos (.h) com definições de tipos e protótipos
+│   ├── camp.h            # Campeonato e árvore AVL
+│   ├── corridas.h        # Gestão e heap de pistas
+│   ├── historico.h       # Histórico de temporadas e rivalidades
+│   ├── itens.h           # Estruturas e manipulação de itens
+│   ├── karts.h           # Definição e atributos dos karts
+│   ├── menu.h            # Interfaces e menus do usuário
+│   ├── oficina.h         # Filas FIFO e Heap da oficina
+│   ├── pilotos.h         # Gestão de pilotos (lista duplamente encadeada)
+│   ├── portabilidade.h   # Compatibilidade Linux/Windows e cores ANSI
+│   └── simulacao.h       # Motor de simulação das corridas
+├── src/                  # Implementação (.c) de cada módulo
+│   ├── camp.c
+│   ├── corridas.c
+│   ├── historico.c
+│   ├── itens.c
+│   ├── karts.c
+│   ├── main.c            # Ponto de entrada da aplicação
+│   ├── menu.c
+│   ├── oficina.c
+│   ├── pilotos.c
+│   ├── portabilidade.c
+│   └── simulacao.c
+├── Makefile              # Automação de compilação
+├── .gitignore            # Regras para ignorar binários e arquivos temporários
+└── README.md             # Documentação principal do projeto
+```
+
+---
+
+## 🚀 Como Compilar e Executar
 
 ### Pré-requisitos
-* Compilador GCC
-* Ferramenta GNU Make
+* Compilador **GCC** instalado (`gcc --version`)
+* Ferramenta **GNU Make** (`make --version`)
 
-### Compilação e Execução
-Na raiz do projeto, execute o comando de compilação:
-
+### 1. Compilar o projeto
+Na raiz do repositório, execute:
 ```bash
 make
+```
+O executável `mario_kart_gp` será gerado.
+
+### 2. Executar
+Você pode rodar diretamente via terminal:
+```bash
+./mario_kart_gp
+```
+Ou através do atalho configurado no `Makefile`:
+```bash
+make run
+```
+
+### 3. Limpar arquivos de compilação
+Para remover os arquivos objeto (`obj/`) e os binários gerados:
+```bash
+make clean
+```
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido para fins educacionais e acadêmicos na Universidade Federal de Pelotas (UFPel).
+Todos os direitos relativos à marca e universo *Mario Kart* pertencem à **Nintendo**.

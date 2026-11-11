@@ -117,15 +117,13 @@ int main(){
     liberar_oficina(&oficina.damaged);
     free(estoque);
     free(central);
-    free(lista);
-    free(removidos);
-    free(campeonato);
-    free(historico);
     liberar_lista_pilotos(lista);
     liberar_lista_pilotos(removidos);
     liberar_historico(historico);
     liberar_camp(campeonato);
     liberar_camp(total); 
+
+    return 0;
 }
  
 
